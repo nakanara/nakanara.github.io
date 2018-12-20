@@ -108,8 +108,8 @@ analytics:
 author:
   name             : "nakanara"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "" # "I am an amazing person."
-  location         : # "Somewhere"
+  bio              : "글쓰기를 노력해보려는 블로그" # "I am an amazing person."
+  location         : "Korea" # "Somewhere"
   email            : "nakanara.com@gmail.com"
   links:
     - label: "Email"
