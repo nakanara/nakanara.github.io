@@ -18,7 +18,7 @@ remote_theme : mmistakes/minimal-mistakes
 minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
-locale                   : "en-US"
+locale                   : "ko-KR" # "en-US"
 title                    : "NaKaNaRa"
 title_separator          : "-"
 name                     : "nakanara"
@@ -37,7 +37,7 @@ comments:
     server               : # https://meta.discourse.org/t/embedding-discourse-comments-via-javascript/31963 , e.g.: meta.discourse.org
   facebook:
     # https://developers.facebook.com/docs/plugins/comments
-    appid                :
+    appid                : "358427294238232"
     num_posts            : # 5 (default)
     colorscheme          : # "light" (default), "dark"
   utterances:
@@ -83,11 +83,11 @@ naver_site_verification  :
 
 # Social Sharing
 twitter:
-  username               :
+  username               : "nakanara"
 facebook:
-  username               :
+  username               : "nakanara"
   app_id                 :
-  publisher              :
+  publisher              : "nakanara"
 og_image                 : # Open Graph/Twitter default site image
 # For specifying social profiles
 # - https://developers.google.com/structured-data/customize/social-profiles
@@ -106,21 +106,22 @@ analytics:
 
 # Site Author
 author:
-  name             : "Your Name"
+  name             : "nakanara"
   avatar           : # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
-  bio              : "I am an amazing person."
-  location         : "Somewhere"
-  email            :
+  bio              : "" # "I am an amazing person."
+  location         : # "Somewhere"
+  email            : "nakanara.com@gmail.com"
   links:
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      # url: mailto:your.name@email.com
+      # url: mailto:nakanara.com@gmail.com # mailto:your.name@email.com
     - label: "Website"
       icon: "fas fa-fw fa-link"
       # url: "https://your-website.com"
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"
       # url: "https://twitter.com/"
+      url : "https://twitter.com/nakanara"
     - label: "Facebook"
       icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"
