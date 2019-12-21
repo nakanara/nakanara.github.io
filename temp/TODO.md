@@ -32,7 +32,27 @@ https://github.com/lukehoban/es6features#destructuring
 ## Javascript
 * 스코프
 * 실행컨텍스트
+* 즉시실행함수(IIFE) => Immediately Invoked Function Expression
+```javascript
+// 선언 후 바로 실행
+(() => {
+  ...
+})();
+```
+* 모듈 생성
+  * 샌드박스 : 유틸성으로 사용할 때.
+```javascript
 
+var modal = (function(){
+
+  ...
+
+  return {
+    open: function(){ ... },
+    close: function(){ ... }
+  }
+}());
+```
 
 
 ## 웹브라우저 실행 순서
