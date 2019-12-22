@@ -9,10 +9,10 @@ https://github.com/lukehoban/es6features#destructuring
   - https://poiemaweb.com/es6-class
 
 * enhanced object literals
-* template strings
+* template strings --OK
 * destructuring
 * default + rest + spread
-* let + const
+* let + const -- const 상수, 오브젝트 변환 추가 필요
 * iterators + for…of
 * generators
 * unicode
@@ -22,7 +22,7 @@ https://github.com/lukehoban/es6features#destructuring
 * proxies
 * symbols
 * subclassable built-ins
-* promises
+* promises -- 동기화 then, 확인 필요
 * math + number + string + array + object APIs
 * binary and octal literals
 * reflect api
@@ -43,8 +43,8 @@ https://github.com/lukehoban/es6features#destructuring
 
 자바스크립트에서 this는 함수를 어떻게 호출했는지에 따라 결정.
 
-> new 로 선언시 this는 빈객체로 생성 할당 됨.
-> new 로 생성된 객체는 빈 객체에 
+> new 로 선언시 this는 빈객체로 생성 할당 됨
+> 호출 시점에 this 객체를 변경하기 위해 call, apply, bind 가 있음
 
 ### 실행 컨텍스트
 * 실행컨텍스트 (실행가능한 코드를 형상화하고 구분하는 추상적인 개념)  
@@ -88,7 +88,6 @@ https://github.com/lukehoban/es6features#destructuring
 
 ### 프로토타입
 
-### 패턴(Scope-Safe Constructor)
 
 
 ### 즉시실행함수(IIFE) => Immediately Invoked Function Expression
@@ -113,6 +112,8 @@ var modal = (function(){
 }());
 ```
 
+
+### 패턴(Scope-Safe Constructor) ??
 
 #### Module 패턴
 (https://itstory.tk/entry/%EA%BC%AD-%EC%95%8C%EC%95%84%EC%95%BC%ED%95%98%EB%8A%94-Javascript-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-4%EA%B0%80%EC%A7%80)
@@ -249,7 +250,15 @@ var officePrinter = printer.getInstance();
 
 
 ## 브라우저 동작 방법
-* 
+
+
+## 도커
+## 쿠버네틱스 K8S
+## 웹팩 **
+## 바벨 **
+## 클라우드
+## vue **
+## react **
 
 ## 엘라스틱서치
 제품군으로는 엘라스틱서치, 로그스테쉬로 구성되어 있으며, 설정을 진행할 수 있는 화면 제품으로 Kibana 존재, 데이터를 가져오기 위한 beats 제품군이 있으며 그 기능에 따라 이름이 존재 함.
@@ -271,13 +280,7 @@ var officePrinter = printer.getInstance();
 * 샤딩!! : 콘텐츠 볼륨의 수평 분활 및 확장 가능, 검색 등의 병렬화를 통한 성능 개선
 
 
-## 도커
-## 쿠버네틱스 K8S
-## 웹팩 
-## 바벨
-## 클라우드
-## vue 
-## react
+
 
 ## Grafana
 
