@@ -30,16 +30,75 @@ https://github.com/lukehoban/es6features#destructuring
 
 
 ## Javascript
-* 스코프
-* 실행컨텍스트
-* 즉시실행함수(IIFE) => Immediately Invoked Function Expression
+### 스코프 https://poiemaweb.com/js-scope
+> 자바스크립트에서 스코프는 함수레벨 스코프를 따름, 함수 내에서 선언된 변수는 함수 외부에서 사용하지 못함, es6에서 도입된 let을 사용할 경우 블록 레벨 스코프를 사용
+> 자바스크립트에서 변수를 찾는 방식은 렉시컬 스코프 방식을 통하여, 실행 환경이 아닌 선언 환경에 따라 상위 스코프를 결정, (실행 환경에 따르는 것을 동적 스코프, 선언 환경을 따르는 것을 적정 스코프, 렉시컬 스코프라고 함)
+
+### 렉시컬 스코프
+
+> 프로그램은 함수를 어디서 호출했는지에 따라서 상위 스코프가 결정되던지(동적 스코프), 어디에서 선언되었는지에 따라서 상위 스코프(`렉시컬 스코프`, 정적 스코프)를 결정한다. 
+
+
+### this
+
+자바스크립트에서 this는 함수를 어떻게 호출했는지에 따라 결정.
+
+> new 로 선언시 this는 빈객체로 생성 할당 됨.
+> new 로 생성된 객체는 빈 객체에 
+
+### 실행 컨텍스트
+* 실행컨텍스트 (실행가능한 코드를 형상화하고 구분하는 추상적인 개념)  
+`EC (Execution Context)`
+
+> 실행 컨텍스트(Execution Context)는 scope, hoisting, this, function, closure 등 동작원리를 담고 있음
+> 함수를 호출하면 실행컨텍스트 스택에 쌓임.
+
+1. 스코프 생성 및 초기화
+
+> 스코프 생성 및 초기화 진행
+> arguments 프로퍼티 초기화, 스코프 체인 연결
+> 전역 컨텍스트와 함수 컨텍스트(`Activation Ojbect/ AO- 할성화객체`)는 다른점은 전역의 경우 매개변수와 인자가 없기 때문에 전역에는 arugments Object가 없다. 전역 컨텍스트의 경우 `GO(Global Object)를 가리킴`
+> 스코프 체인은 변수를 검색하기 위한 방식.(식별자 중 변수가 아닌 객체를 검색하는 프로퍼티는 프로토타입 체인)
+> JS엔진은 스코프 체인을 통해 렉시컬 스코프를 파악. 
+> 스코프체인이라는 의미는 해당 변수를 현재 스코프에서 검색 없을 경우 상위 스코프로 올라가면서 찾는 것을 스코프 체인이라고 함.
+
+
+2. Variable Instantiation `Variable Object (VO/변수 객체)`
+> 스코프 체인 생성 및 초기화가 종료되면 Variable Instantiation(변수 객체화) 실행
+> 실행에 필요한 여러 정보 생성(변수, 매개변수(arguments), 함수 선언(함수 표현식 제외))
+> > 변수 선언 방식
+> > 1. 매개변수가 인수(arguments)로 선언
+> > 2. 대상 코드에서 함수 선언식이 호이스팅됨(함수 호이스팅)
+> > 3. 변수 호이스팅 (undefined) 됨. var는 선언과 초기화가 같이되어 undfined, let은 선언만 되어 있기 때문에 ref오류.
+
+
+3. this value 할당
+
+> this value 가 할당되며, this의 경우 호출 패턴에 따라서 결정
+> 
+
+### 변수 생성 단계
+
+호이스팅을 통해서 변수는 상단에 올라와서 선언은 되지만, 실제 할당은 그 위치에서 됨.
+
+1. 선언단계(declaration phses)
+2. 초기화단계(Initalization phses) - undefined로 초기화
+3. 할당 단계(Assignment phses) - undefined에 실제 사용 값 할당
+`var의 경우 선언과 초기화가 함께 이루어지기 때문에 순서에 관련없이 사용해도  undefined로 표시`
+
+### 프로토타입
+
+### 패턴(Scope-Safe Constructor)
+
+
+### 즉시실행함수(IIFE) => Immediately Invoked Function Expression
 ```javascript
 // 선언 후 바로 실행
 (() => {
   ...
 })();
 ```
-* 모듈 생성
+### 모듈 생성
   * 샌드박스 : 유틸성으로 사용할 때.
 ```javascript
 
@@ -53,6 +112,103 @@ var modal = (function(){
   }
 }());
 ```
+
+
+#### Module 패턴
+(https://itstory.tk/entry/%EA%BC%AD-%EC%95%8C%EC%95%84%EC%95%BC%ED%95%98%EB%8A%94-Javascript-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-4%EA%B0%80%EC%A7%80)
+
+Java의 클래스와 유사
+public, private 으로 구분될 수 있음.
+
+```javascript
+(function() { 
+  // private 변수들과 함수들을 선언 
+  return { 
+    // public 변수들과 함수들을 선언
+  }
+})();
+```
+
+```javascript
+var HTMLChanger = (function() {
+  var contents = 'contents' 
+  var changeHTML = function() { 
+    var element = document.getElementById('attribute-to-change');
+    element.innerHTML = contents; 
+  } 
+  
+  return { 
+    callChangeHTML: function() { 
+      changeHTML(); 
+      console.log(contents); 
+    } 
+  }; 
+})(); 
+
+HTMLChanger.callChangeHTML(); // Outputs: 'contents' 
+console.log(HTMLChanger.contents); // undefined
+```
+
+
+
+#### Observer  패턴
+
+```javascript
+
+
+```
+
+#### Single Ton 패턴
+
+
+```javascript
+var printer = (function () { 
+  var printerInstance; 
+  
+  function create () { 
+    function print() { 
+    // underlying printer mechanics 
+    } 
+    
+    function turnOn() { 
+      // warm up 
+      // check for paper 
+    } 
+    
+    return { 
+      // public + private states and behaviors 
+      print: print, 
+      turnOn: turnOn
+    }; 
+  } 
+    
+  return { 
+    getInstance: function() { 
+      if(!printerInstance) { 
+        printerInstance = create();
+      } 
+      
+      return printerInstance; 
+    }
+  }; 
+  
+})();
+
+// 사용
+var officePrinter = printer.getInstance();
+
+```
+### 클로저
+
+외부 실행 컨텍스트가 사라져도 참조가 되어있다면, 실행 환경은 유지되는 것이 클로저, 클로저를 이용하여 모듈 구현
+`클로저는 함수와 그 함수가 선언되었을 때의 렉시컬 환경 조합`
+
+
+반환된 내부함수가 자신이 선언되었던 때의 환경을 기억하여(렉시컬 환경= Lexical environment) 밖에서 호출되더라도 그 환경(스코프)에 접근할 수 있는 함수 == 클로저란 자신이 생성되었을 때 환경을 기억(Lexical environment)하는 함수
+
+`렉시컬 스코핑`: 스코프는 함수를 호출할 때 어디서 선언되었는지에 따라 결정
+
+
 
 
 ## 웹브라우저 실행 순서
@@ -124,3 +280,13 @@ var modal = (function(){
 ## react
 
 ## Grafana
+
+## 코딩테스트
+
+- position을 고정으로 잡기 위해서 fixed 를 사용하여 전체 영역을 잡았으며,
+그 상단에 relact를 이용하여 top 50%로 중앙을 잡고, margin: 0 auto를 사용하여 중앙을 잡았음.
+
+- css로 zindex 설정한 것을 style로 가져오지 못한점에 대해서` document.defaultView.getcomputedStyle(el, null).getPropertyValue('z-index');` 로 가져 옴
+
+- innerHTML로 DOM 태그 생성하던 것을 div 태그에 그린 후 tag를 복사하는 방법으로 변경
+
