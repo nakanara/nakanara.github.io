@@ -1,31 +1,462 @@
-* 확인 필요
 
 ## ES6(ECMA2015) 관련
 
 https://github.com/lukehoban/es6features#destructuring
 
-* ~arrow function~
+* arrow function
+
+일반 함수와 함수 축약형으르로 설정시 가장 큰 차이점은 this(Lecical this)부분이며, 대부분 콜백에서 많이 사용, this부분을 사용할 경우 유의 필요
+
+화살표 함수의 경우 생성자(constructor)를 사용 할 수 없다.
+
+
 * [classes] 
   - https://jsdev.kr/t/es6/294
   - https://poiemaweb.com/es6-class
 
+생성자를 사용할 수 있다. 상속을 받을 수 있으며, super.를 사용하여 부모 메소드를 호출
+클래스는 선언전에 사용 할 수 없다.
+클래스의 필드는 생성자(constructor) 에서만 가능
+
+```javascript
+// 클래스 선언문
+class Person {
+  // constructor(생성자)
+  constructor(name) {
+    this._name = name;
+  }
+
+  sayHi() {
+    console.log(`Hi! ${this._name}`);
+  }
+}
+
+// 인스턴스 생성
+const me = new Person('Lee');
+me.sayHi(); // Hi! Lee
+
+console.log(me instanceof Person); // true
+```
+
+```javascript
+class Foo {
+  constructor(prop) {
+    this.prop = prop;
+  }
+
+  static staticMethod() {
+    /*
+    정적 메소드는 this를 사용할 수 없다.
+    정적 메소드 내부에서 this는 클래스의 인스턴스가 아닌 클래스 자신을 가리킨다.
+    */
+    return 'staticMethod';
+  }
+
+  prototypeMethod() {
+    return this.prop;
+  }
+}
+
+// 정적 메소드는 클래스 이름으로 호출한다.
+console.log(Foo.staticMethod());
+
+const foo = new Foo(123);
+// 정적 메소드는 인스턴스로 호출할 수 없다.
+console.log(foo.staticMethod()); // Uncaught TypeError: foo.staticMethod is not a function
+```
+
+```javascript
+var Foo = (function () {
+  // 생성자 함수
+  function Foo(prop) {
+    this.prop = prop;
+  }
+
+  Foo.staticMethod = function () {
+    return 'staticMethod';
+  };
+
+  Foo.prototype.prototypeMethod = function () {
+    return this.prop;
+  };
+
+  return Foo;
+}());
+
+var foo = new Foo(123);
+console.log(foo.prototypeMethod()); // 123
+console.log(Foo.staticMethod()); // staticMethod
+console.log(foo.staticMethod()); // Uncaught TypeError: foo.staticMethod is not a function
+```
+
 * enhanced object literals
-* template strings --OK
+
+enhanced(인핸스트)
+객체 설정은 간단하고 편리하게, 프로퍼티 값을 변수로 사용할 경우 변수 명으로 항목이 생성 됨.
+
+```javascript
+// 프로퍼티를 변수로 사용 할 경우 변수명으로 자동 설정
+let x = 1, y = 2;
+
+const obj = { x, y };
+
+console.log(obj); // { x: 1, y: 2 }
+
+// 함수명으로 자동 프로퍼티명 설정
+const obj = {
+  name: 'Lee',
+  // 메소드 축약 표현
+  sayHi() {
+    console.log('Hi! ' + this.name);
+  }
+};
+
+obj.sayHi(); // Hi! Lee
+```
+
+es5에서는 부모 설정을 하기 위해서는 `var child = Object.create(parent);` 로 시작했어야 하나
+```javascript
+const parent = {
+  name: 'parent',
+  sayHi() {
+    console.log('Hi! ' + this.name);
+  }
+};
+
+const child = {
+  // child 객체의 프로토타입 객체에 parent 객체를 바인딩하여 상속을 구현한다.
+  __proto__: parent,
+  name: 'child'
+};
+
+parent.sayHi(); // Hi! parent
+child.sayHi();  // Hi! child
+```
+
+
+
+* template literal 
+
+백택(\`) 으로 정의. 일반적인 문자열에서는 줄바꿈이 허용되지 않으므로 백슬러시로 시작하는 `이스케이프시퀀스` 사용 + 연산자를 사용하지 않고도 문자열을 만들 수 있는 문자열 인터폴레이션(String interpolation) `${...}` 표현
+
+  
+
+
 * destructuring(디스트럭처링) 
+
+
 구조화된 배열 또는 개체를 비구조화, 파괴하여 개별적 변수에 할당, 배열 또는 객체에 필요한 값만 추출하여 변수에 할당
+
 ```javascript
 [x, y, z] = [1,2,3] // x=1, y=2, z=3
 [x, , z] = [1,2,3] // x = 1, z = 3
 [x, y, z=1] = [1,2] // x=1, y=2, z=1
+
+
+// 프로퍼티 키가 prop1인 프로퍼티의 값을 변수 p1에 할당
+// 프로퍼티 키가 prop2인 프로퍼티의 값을 변수 p2에 할당
+const { prop1: p1, prop2: p2 } = { prop1: 'a', prop2: 'b' };
+console.log(p1, p2); // 'a' 'b'
+console.log({ prop1: p1, prop2: p2 }); // { prop1: 'a', prop2: 'b' }
+
+// 아래는 위의 축약형이다
+const { prop1, prop2 } = { prop1: 'a', prop2: 'b' };
+console.log({ prop1, prop2 }); // { prop1: 'a', prop2: 'b' }
+
+// default value
+const { prop1, prop2, prop3 = 'c' } = { prop1: 'a', prop2: 'b' };
+console.log({ prop1, prop2, prop3 }); // { prop1: 'a', prop2: 'b', prop3: 'c' }
+
 ```
 
-* default + rest + spread
+* default + rest + spread(스프레드)
+
+default 인자값이 없는 경우 기본 값을 설정 할 수 있다.
+```javascript
+function sum(x = 0, y = 0) {
+
+  console.log(arguments); // default 값으로 설정된 것은 length 에 포함되지 않음.
+  // arguments 는 유사 배열로 사용할 경우 Array.prototype.slice.call(arguments) 를 사용하여 array 객체로 인지
+
+  return x+y;
+}
+
+console.log(sum()); // 0 x =0, y = 0으로 설정.
+console.log(sum(5)); // 5 x =5, y = 0으로 설정.
+```
+
+rest parameter 는 파라메터의 나머지 매개변수를 `...` 붙여 정의한 매개변수 배열로 받는것.
+rest 파라메터는 반드시 마지막에만 사용 가능, 매개변수를 설정하고 남은 것에 대해서 할당
+```javascript
+function foo(...rest) {
+  console.log(Array.isArray(rest)); // true
+  console.log(rest); // [ 1, 2, 3, 4, 5 ]
+}
+
+foo(1, 2, 3, 4, 5);
+
+function bar(param1, param2, ...rest) {
+  console.log(param1); // 1
+  console.log(param2); // 2
+  console.log(rest);   // [ 3, 4, 5 ]
+}
+
+bar(1, 2, 3, 4, 5);
+```
+
+spread(스프레드) 문법의 경우 리터럴 객체를 요소를 분리한다. spread 대상은 이터러블 객체
+
+```javascript
+
+// ...[1, 2, 3]는 [1, 2, 3]을 개별 요소로 분리한다(→ 1, 2, 3)
+console.log(...[1, 2, 3]) // 1, 2, 3
+
+// 문자열은 이터러블이다.
+console.log(...'Hello');  // H e l l o
+
+// Map과 Set은 이터러블이다.
+console.log(...new Map([['a', '1'], ['b', '2']]));  // [ 'a', '1' ] [ 'b', '2' ]
+console.log(...new Set([1, 2, 3]));  // 1 2 3
+
+// 이터러블이 아닌 일반 객체는 Spread 문법의 대상이 될 수 없다.
+console.log(...{ a: 1, b: 2 });
+// TypeError: Found non-callable @@iterator
+```
+
+`Rest 파라미터는 Spread 문법을 사용하여 파라미터를 정의한 것을 의미한다. 형태가 동일하여 혼동할 수 있으므로 주의가 필요하다.`
+
+spread 로 배열 복사를 할 경우 앝은 복사로 이루어짐. (객체는 새로운 것이지만 내용은 같은 것)
+```javascript
+const todos = [
+  { id: 1, content: 'HTML', completed: false },
+  { id: 2, content: 'CSS', completed: true },
+  { id: 3, content: 'Javascript', completed: false }
+];
+
+// shallow copy
+// const _todos = todos.slice();
+const _todos = [...todos];
+console.log(_todos === todos); // false
+
+// 배열의 요소는 같다. 즉, 얕은 복사되었다.
+console.log(_todos[0] === todos[0]); // true
+```
+
+객체의 병합
+```javascript
+// 객체의 병합
+const merged = { ...{ x: 1, y: 2 }, ...{ y: 10, z: 3 } };
+console.log(merged); // { x: 1, y: 10, z: 3 }
+
+// 특정 프로퍼티 변경
+const changed = { ...{ x: 1, y: 2 }, y: 100 };
+// changed = { ...{ x: 1, y: 2 }, ...{ y: 100 } }
+console.log(changed); // { x: 1, y: 100 }
+
+// 프로퍼티 추가
+const added = { ...{ x: 1, y: 2 }, z: 0 };
+// added = { ...{ x: 1, y: 2 }, ...{ z: 0 } }
+console.log(added); // { x: 1, y: 2, z: 0 }
+```
+
 * let + const -- const 상수, 오브젝트 변환 추가 필요
+
+let 블록레벨 스코프
+const 상수 - 재할당 금지
+객체의 경우 내부 값은 변경해도 오류가 나지 않음
+
+
 * iterators + for…of
+
+이터레이션 프로토콜을 준수한 객체는 for…of 문으로 순회할 수 있고 Spread 문법의 피연산자가 될 수 있다.
+이터레이션 프로토콜에는 `이터러블 프로토콜(iterable protocol)`과 `이터레이터 프로토콜(iterator protocol)`이 있다.
+
+이터레이터를 이용하여 디스트럭처링(변수 분활), spend, for ... of, map/set 생성자 에서 사용
+
+**이터러블**
+```javascript
+const array = [1, 2, 3];
+
+// 배열은 Symbol.iterator 메소드를 소유한다.
+// 따라서 배열은 이터러블 프로토콜을 준수한 이터러블이다.
+console.log(Symbol.iterator in array); // true
+
+// 이터러블 프로토콜을 준수한 배열은 for...of 문에서 순회 가능하다.
+for (const item of array) {
+  console.log(item);
+}
+```
+**이터레이터**
+> 이터레이터 프로토콜은 next 메소드를 소유하며 next 메소드를 호출하면 이터러블을 순회하며 value, done 프로퍼티를 갖는 이터레이터 리절트 객체를 반환하는 것이다. 이 규약을 준수한 객체가 이터레이터이다.   
+이터러블 프로토콜을 준수한 이터러블은 Symbol.iterator 메소드를 소유한다. 이 메소드를 호출하면 이터레이터를 반환한다. 이터레이터 프로토콜을 준수한 이터레이터는 next 메소드를 갖는다.
+
+```javascript
+// 배열은 이터러블 프로토콜을 준수한 이터러블이다.
+const array = [1, 2, 3];
+
+// Symbol.iterator 메소드는 이터레이터를 반환한다.
+const iterator = array[Symbol.iterator]();
+
+// 이터레이터 프로토콜을 준수한 이터레이터는 next 메소드를 갖는다.
+console.log('next' in iterator); // true
+
+// 이터레이터의 next 메소드를 호출하면 value, done 프로퍼티를 갖는 이터레이터 리절트 객체를 반환한다.
+// next 메소드를 호출할 때 마다 이터러블을 순회하며 이터레이터 리절트 객체를 반환한다.
+console.log(iterator.next()); // {value: 1, done: false}
+console.log(iterator.next()); // {value: 2, done: false}
+console.log(iterator.next()); // {value: 3, done: false}
+console.log(iterator.next()); // {value: undefined, done: true}
+```
+
+(https://poiemaweb.com/es6-iteration-for-of)
+
 * generators
-* unicode
-* modules
+
+ES6에서 도입된 제너레이터(Generator) 함수는 이터러블을 생성하는 함수이다. 제너레이터 함수를 사용하면 이터레이션 프로토콜을 준수해 이터러블을 생성하는 방식보다 간편하게 이터러블을 구현할 수 있다. 또한 제너레이터 함수는 비동기 처리에 유용하게 사용된다
+`제너레이터 함수는 일반 함수와는 다른 독특한 동작을 한다. 제너레이터 함수는 일반 함수와 같이 함수의 코드 블록을 한 번에 실행하지 않고 함수 코드 블록의 실행을 일시 중지했다가 필요한 시점에 재시작할 수 있는 특수한 함수이다`
+
+**제너레이터 함수는 function\* 키워드로 선언한다. 그리고 하나 이상의 yield 문을 포함한다.**
+
+```javascript
+// 제너레이터 함수 정의
+function* counter() {
+  for (const v of [1, 2, 3]) yield v;
+  // => yield* [1, 2, 3];
+}
+
+// 제너레이터 함수를 호출하면 제너레이터를 반환한다.
+let generatorObj = counter();
+
+// 제너레이터는 이터러블이다.
+console.log(Symbol.iterator in generatorObj); // true
+
+for (const i of generatorObj) {
+  console.log(i); // 1 2 3
+}
+
+generatorObj = counter();
+
+// 제너레이터는 이터레이터이다.
+console.log('next' in generatorObj); // true
+
+console.log(generatorObj.next()); // {value: 1, done: false}
+console.log(generatorObj.next()); // {value: 2, done: false}
+console.log(generatorObj.next()); // {value: 3, done: false}
+console.log(generatorObj.next()); // {value: undefined, done: true}
+```
+
+```javascript
+function* gen(n) {
+  let res;
+  res = yield n;    // n: 0 ⟸ gen 함수에 전달한 인수
+
+  console.log(res); // res: 1 ⟸ 두번째 next 호출 시 전달한 데이터
+  res = yield res;
+
+  console.log(res); // res: 2 ⟸ 세번째 next 호출 시 전달한 데이터
+  res = yield res;
+
+  console.log(res); // res: 3 ⟸ 네번째 next 호출 시 전달한 데이터
+  return res;
+}
+const generatorObj = gen(0);
+
+console.log(generatorObj.next());  // 제너레이터 함수 시작
+console.log(generatorObj.next(1)); // 제너레이터 객체에 1 전달
+console.log(generatorObj.next(2)); // 제너레이터 객체에 2 전달
+console.log(generatorObj.next(3)); // 제너레이터 객체에 3 전달
+/*
+{ value: 0, done: false }
+{ value: 1, done: false }
+{ value: 2, done: false }
+{ value: 3, done: true }
+*/
+```
+
+**ES7 async/awit 추가**
+
+```javascript
+const fetch = require('node-fetch');
+
+// Promise를 반환하는 함수 정의
+function getUser(username) {
+  return fetch(`https://api.github.com/users/${username}`)
+    .then(res => res.json())
+    .then(user => user.name);
+}
+
+async function getUserAll() {
+  let user;
+  user = await getUser('jeresig');
+  console.log(user);
+
+  user = await getUser('ahejlsberg');
+  console.log(user);
+
+  user = await getUser('ungmo2');
+  console.log(user);
+}
+
+getUserAll();
+```
 * module loaders
+
+CommonJS방식으로 모듈 로더.
+export keyword로 해당 변수 공개
+모듈에서 하나만 export 할 경우 default 키워드를 사용.
+default 키워드와 함께 모듈로의 경우 {} 없이 임의의 이름으로 import
+
+```javascript
+// lib.mjs
+// 라이브러리
+const pi = Math.PI;
+
+function square(x) {
+  return x * x;
+}
+
+class Person {
+  constructor(name) {
+    this.name = name;
+  }
+}
+
+// 변수, 함수 클래스를 하나의 객체로 구성하여 공개
+export { pi, square, Person };
+```
+
+```javascript
+// app.mjs
+// 같은 폴더 내의 lib.mjs 모듈을 로드.
+// lib.mjs 모듈이 export한 식별자로 import한다.
+// ES6 모듈의 파일 확장자를 생략할 수 없다.
+import { pi, square, Person } from './lib.mjs';  // 사용하려는 곳
+
+console.log(pi);         // 3.141592653589793
+console.log(square(10)); // 100
+console.log(new Person('Lee')); // Person { name: 'Lee' }
+```
+
+```javascript
+// app.mjs
+import * as lib from './lib.mjs'; // 전체를 로딩하며 하나의 식별자로 판단하려면,
+
+console.log(lib.pi);         // 3.141592653589793
+console.log(lib.square(10)); // 100
+console.log(new lib.Person('Lee')); // Person { name: 'Lee' }
+```
+
+
+```javascript
+//이름을 변경하여 import할 수도 있다
+// app.mjs
+import { pi as PI, square as sq, Person as P } from './lib.mjs';
+
+console.log(PI);    // 3.141592653589793
+console.log(sq(2)); // 4
+console.log(new P('Kim')); // Person { name: 'Kim' }
+```
+
 * map + set + weakmap + weakset
 
 * * Sets
@@ -78,15 +509,112 @@ wm.has(key); // 존재 여부.
 `http://chanlee.github.io/2016/08/15/hello-es6-part-3/`
 `https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap`
 
-* proxies
-* symbols
+* proxies -- todo
+* symbol
+
+기존 JS는 6개 타입만 존재 원시타입(String, Number, boolean, null, undefined) + 객체(Object)
+Symbol 타입 추가(`변경 불가능한 원시타입`)
+심볼은 이름 충돌이 없는 유일한 객체의 프러퍼티를 만둘기 위함
+심볼 생성은 new Symbol() 하지 않음.
+
+
+```javascript
+let mySymbol = Symbol();
+
+console.log(mySymbol);        // Symbol()
+console.log(typeof mySymbol); // symbol
+```
+
+```javascript
+let symbolWithDesc = Symbol('ungmo2'); // 심볼의 이름은 symbol 생성에는 관계가 없으며 디버깅시 용의 - 심볼 디스크립션
+
+console.log(symbolWithDesc); // Symbol(ungmo2)
+console.log(symbolWithDesc === Symbol('ungmo2')); // false
+```
+
+```javascript
+const obj = {};
+
+const mySymbol = Symbol('mySymbol');
+obj[mySymbol] = 123;
+
+console.log(obj); // { [Symbol(mySymbol)]: 123 }
+console.log(obj[mySymbol]); // 123
+```
+
+> - Symbol.iterator
+Well-Known Symbol은 자바스크립트 엔진에 상수로 존재하며 자바스크립트 엔진은 Well-Known Symbol을 참조하여 일정한 처리를 한다. 예를 들어 어떤 객체가 Symbol.iterator를 프로퍼티 key로 사용한 메소드 가지고 있으면 자바스크립트 엔진은 이 객체가 이터레이션 프로토콜을 따르는 것으로 간주하고 이터레이터로 동작하도록 한다.  
+Array, String, Map, Set, DOM data, arguments
+
+> - Symbol.for
+Symbol.for 메소드는 인자로 전달받은 문자열을 키로 사용하여 Symbol 값들이 저장되어 있는 전역 Symbol 레지스트리에서 해당 키와 일치하는 저장된 Symbol 값을 검색한다. 이때 검색에 성공하면 검색된 Symbol 값을 반환하고, 검색에 실패하면 새로운 Symbol 값을 생성하여 해당 키로 전역 Symbol 레지스트리에 저장한 후, Symbol 값을 반환한다.
+``` javascript
+// 전역 Symbol 레지스트리에 foo라는 키로 저장된 Symbol이 없으면 새로운 Symbol 생성
+const s1 = Symbol.for('foo');
+// 전역 Symbol 레지스트리에 foo라는 키로 저장된 Symbol이 있으면 해당 Symbol을 반환
+const s2 = Symbol.for('foo');
+
+console.log(s1 === s2); // true
+```
+
+
+
 * subclassable built-ins
 * promises -- 동기화 then, 확인 필요
+
+자바스크립트의 비동기 방식으로 처리 하기 위한 패턴으로 콜백 함수 사용
+예외 처리의 한계
+Promise는 resolve 와 reject 을 매개변수로 받음
+
+```javascript
+// Promise 객체의 생성
+const promise = new Promise((resolve, reject) => {
+  // 비동기 작업을 수행한다.
+
+  if (/* 비동기 작업 수행 성공 */) {
+    resolve('result');
+  }
+  else { /* 비동기 작업 수행 실패 */
+    reject('failure reason');
+  }
+});
+
+```
+
+```javascript
+promiseAjax('GET', 'http://jsonplaceholder.typicode.com/posts/1')
+  .then(JSON.parse) // 성공
+  .then(render) // 실패
+  .catch(console.error); //오류
+  ```
+
+> Promise  상태
+> - pending : 대기 => resolve, reject 호출 전
+> - fulfilled : 비동기 처리가 수행된 상태 => resolve 호출
+> - rejected : 비동기 처리 실패 => reject
+> - settled : 비동기 처리가 수행된 상태 -> resolve 또는 reject 호출
+
+`Promise.all 메소드는 프로미스가 담겨 있는 배열 등의 이터러블을 인자로 전달 받는다. 병렬 처리. 하나만 실패해도 실패, 전체 성공이 성공`
+`Promise.race 메소드는 Promise.all 메소드와 동일하게 프로미스가 담겨 있는 배열 등의 이터러블을 인자로 전달 받는다. 그리고 Promise.race 메소드는 Promise.all 메소드처럼 모든 프로미스를 병렬 처리하는 것이 아니라 가장 먼저 처리된 프로미스가 resolve한 처리 결과를 resolve하는 새로운 프로미스를 반환한다.`
+
+
 * math + number + string + array + object APIs
 * binary and octal literals
 * reflect api
 * tail calls
 
+
+### Old
+* concat 배열 붙이기
+* slice 배열 복제
+* splice 배열 자르기(항목 추가)
+* fn.call(null, arg) 함수 호출 - 매개변수 하나
+* fn.apply(null, arr args) 함수 호출 - 매개변수 여러개.
+* push 항목 추가
+* pop 항목 빼기
+* shift 앞에 항목 빼기
+* unshift 앞에 항목을 한칸씩 밀고 앞에 추가
+* 
 
 
 
@@ -146,6 +674,9 @@ wm.has(key); // 존재 여부.
 2. 초기화단계(Initalization phses) - undefined로 초기화
 3. 할당 단계(Assignment phses) - undefined에 실제 사용 값 할당
 `var의 경우 선언과 초기화가 함께 이루어지기 때문에 순서에 관련없이 사용해도  undefined로 표시`
+
+선언 단계(ReferenceError)에서 초기화 단계 사이에는 일시적인 사각지대(TDZ = Temporal Dead Zone)에 빠져서 ReferenceError발생.
+
 
 ### 프로토타입
 
@@ -315,16 +846,156 @@ var officePrinter = printer.getInstance();
 
 ## 도커
 ## 쿠버네틱스 K8S
-## 웹팩 **
+
 ## 바벨 **
-## 클라우드
+
+최신문법을 지원하지 않는 브라우저를 위해 ES5이하의 코드로 변환(`트랜스파일링`) 하는 기능
+.bablerc 설정 파일을 통해 프리셋 설정- 대표적 프리셋
+> - @babel/preset-env
+> - @babel/preset-flow
+> - @babel/preset-react
+> - @babel/preset-typescript
+
+바벨 트랜스파일링 설정
+
+```json
+{
+  "name": "es6-project",
+  "version": "1.0.0",
+  "scripts": {  
+    // -w 타켓 디렉토리의 모든 파일
+    // -d 결과물 디렉토리
+    "build": "babel src/js -w -d dist/js"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1"
+  }
+}
+```
+
+> Promise, Object.assign, Array.from 등과 같이 ES5 이하로 대체할 수 없는 기능은 트랜스파일링이 되지 않는다.
+따라서 오래된 브라우저에서도 ES6+에서 새롭게 추가된 객체나 메소드를 사용하기 위해서는 @babel/polyfill을 설치해야 한다
+
+> $ npm install @babel/polyfill
+
+바벨 사용시 @bable/pollfill 추가
+```javascript
+// webpack.config.js
+const path = require('path');
+
+module.exports = {
+  // entry files
+  entry: ['@babel/polyfill', './src/js/main.js'],
+```
+
+
+
+## 웹팩 **
+
+`의존 관계에 있는 모듈들을 하나의 자바스크립트 파일로 번들링하는 모듈 번들러이다`. Webpack을 사용하면 의존 모듈이 하나의 파일로 번들링되므로 별도의 모듈 로더가 필요없다. 그리고 다수의 자바스크립트 파일을 하나의 파일로 번들링하므로 html 파일에서 script 태그로 다수의 자바스크립트 파일을 로드해야 하는 번거로움도 사라진다
+
+바벨 로더. 설치 
+> $ npm install --save-dev babel-loader
+
+
+webpack.config.js 파일 webpack config
+
+```javscript
+module.exports = {
+  // enntry file
+  entry: './src/js/main.js',
+  // 컴파일 + 번들링된 js 파일이 저장될 경로와 이름 지정
+  output: {
+    path: path.resolve(__dirname, 'dist/js'),
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        include: [
+          path.resolve(__dirname, 'src/js')
+        ],
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-proposal-class-properties']
+          }
+        }
+      }
+    ]
+  },
+  devtool: 'source-map',
+  // https://webpack.js.org/concepts/mode/#mode-development
+  mode: 'development'
+};
+```
+
+**SASS 로더**
+
+node-sass는 node.js 환경에서 사용할 수 있는 Sass 라이브러리이다. 실제로 Sass를 css로 컴파일하는 것은 node-sass이다. style-loader, css-loader, sass-loader는 Webpack 플러그인이다.
+
+>$ npm install node-sass style-loader css-loader sass-loader --save-dev
+
+```javascript
+const path = require('path');
+
+module.exports = {
+  // entry files
+  entry: ['@babel/polyfill', './src/js/main.js', './src/sass/main.scss'],
+  // 컴파일 + 번들링된 js 파일이 저장될 경로와 이름 지정
+  output: {
+    path: path.resolve(__dirname, 'dist/js'),
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        include: [
+          path.resolve(__dirname, 'src/js')
+        ],
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-proposal-class-properties']
+          }
+        }
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          "style-loader", // creates style nodes from JS strings
+          "css-loader",   // translates CSS into CommonJS
+          "sass-loader"   // compiles Sass to CSS, using Node Sass by default
+        ],
+        exclude: /node_modules/
+      }
+    ]
+  },
+  devtool: 'source-map',
+  // https://webpack.js.org/concepts/mode/#mode-development
+  mode: 'development'
+};
+```
+
+## 클라우드 
+AWS  확인 필요
+
 ## vue **
 ## react **
 > Redux , Flux, ReactNative
 ## TypeScript
 
 
-## node.js
+## node.js **
+## sass **
 
 ## 엘라스틱서치
 제품군으로는 엘라스틱서치, 로그스테쉬로 구성되어 있으며, 설정을 진행할 수 있는 화면 제품으로 Kibana 존재, 데이터를 가져오기 위한 beats 제품군이 있으며 그 기능에 따라 이름이 존재 함.
@@ -363,3 +1034,17 @@ var officePrinter = printer.getInstance();
 ## ETC
 
 * ember (js 프레임워크)
+
+* TC39 프로세스
+> TC39 프로세스는 ECMA-262 명세(ECMAScript)에 새로운 표준 사양(제안. Proposal)을 추가하기 위해 공식적으로 명문화해 놓은 과정을 말한다. TC39 프로세스는 0 단계부터 4 단계까지 총 5개의 단계로 구성되어 있고 상위 단계로 승급하기 위한 명시적인 조건들이 존재한다. 승급 조건을 충족시킨 제안(Proposal)은 TC39의 동의를 통해 다음 단계(Stage)로 승급된다. TC39 프로세스는 아래의 단계를 거쳐 최종적으로 ECMA-262 명세(ECMAScript)의 새로운 표준 사양이 된다.
+
+stage 0: strawman => stage 1: proposal => stage 2: draft => stage 3: candidate => stage 4: finished
+
+* 오버라이딩(Overriding)
+> 상위 클래스가 가지고 있는 메소드를 하위 클래스가 재정의하여 사용하는 방식이다.
+
+* 오버로딩(Overloading)
+> 매개변수의 타입 또는 갯수가 다른, 같은 이름의 메소드를 구현하고 매개변수에 의해 메소드를 구별하여 호출하는 방식이다. 자바스크립트는 오버로딩을 지원하지 않지만 arguments 객체를 사용하여 구현할 수는 있다.
+
+## 확인 필요
+Object.assign, Array.form (배열 일차원) -- todo
