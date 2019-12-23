@@ -1,3 +1,4 @@
+* 확인 필요
 
 ## ES6(ECMA2015) 관련
 
@@ -10,7 +11,14 @@ https://github.com/lukehoban/es6features#destructuring
 
 * enhanced object literals
 * template strings --OK
-* destructuring
+* destructuring(디스트럭처링) 
+구조화된 배열 또는 개체를 비구조화, 파괴하여 개별적 변수에 할당, 배열 또는 객체에 필요한 값만 추출하여 변수에 할당
+```javascript
+[x, y, z] = [1,2,3] // x=1, y=2, z=3
+[x, , z] = [1,2,3] // x = 1, z = 3
+[x, y, z=1] = [1,2] // x=1, y=2, z=1
+```
+
 * default + rest + spread
 * let + const -- const 상수, 오브젝트 변환 추가 필요
 * iterators + for…of
@@ -19,6 +27,57 @@ https://github.com/lukehoban/es6features#destructuring
 * modules
 * module loaders
 * map + set + weakmap + weakset
+
+* * Sets
+> 자료형에 관계 없이 원시 값과 객체 참조 모두 유일한 값을 저장
+var s = new Set();
+s.add('hello').add('goodbye').add('hello');
+s.size === 2
+s.has('hello') === true;
+s.clear() ; // 모든 요소 제거
+s.delete(value); // 해당 요소 제거
+s.entries(); // 삽입순으로 [value, value] 로 되는 iterator 객체 반환
+s.forEach();
+s.keys();
+s.values();
+
+
+* * Map
+> 키-값을 기억하며, 삽입 순서도 기억.(Object는 삽입 순서 아님)
+> new Map([iterable]) // 요소가 Key-value 으로 구성된것은 Map에 초기화.
+> Object에서는 키에 String, symbol을 사용할 수 있지만, Map은 함수, 객체, 원시 자료형 등 어떤 값도 사용 가능
+> Map은 size로 쉽게 크기 판단.
+var m = new Map();
+m.set('hello', 42);
+m.set(s, 34);
+m.set(s) == 34;
+m.keys(); // Key itrate
+m.values(); // value itertor
+m.size // length
+m.delete(key);
+m.clear();
+m.has(key);
+for(let [key, val] of m.entries()) { // [key, value] 로 반환
+  ...
+}
+m.forEach(callbackfn)
+
+* * WeakMap 
+> 키가 약하게 참조되는 키/값 컬렉션. - 키는 객체여야 함(오직 Object) 원시 데이터를 key로 허용하지 않음.
+> weakMap 내 키는 약하게 유지, 다른 강한 키 참조가 없는 경우 , 모든 항목은 가비지 컬렉터에 의해 weakmap에서 제거
+> 열거불가, 키 목록을 제공하는 메서드가 없음.
+
+var wm = new WeakMap();
+
+wm.length 
+wm.delete(key)
+wm.get(key);
+wm.has(key); // 존재 여부.
+// wm.clear(); 없음.
+
+`http://chanlee.github.io/2016/08/15/hello-es6-part-3/`
+`https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap`
+
 * proxies
 * symbols
 * subclassable built-ins
@@ -27,6 +86,8 @@ https://github.com/lukehoban/es6features#destructuring
 * binary and octal literals
 * reflect api
 * tail calls
+
+
 
 
 ## Javascript
@@ -259,6 +320,11 @@ var officePrinter = printer.getInstance();
 ## 클라우드
 ## vue **
 ## react **
+> Redux , Flux, ReactNative
+## TypeScript
+
+
+## node.js
 
 ## 엘라스틱서치
 제품군으로는 엘라스틱서치, 로그스테쉬로 구성되어 있으며, 설정을 진행할 수 있는 화면 제품으로 Kibana 존재, 데이터를 가져오기 위한 beats 제품군이 있으며 그 기능에 따라 이름이 존재 함.
@@ -293,3 +359,7 @@ var officePrinter = printer.getInstance();
 
 - innerHTML로 DOM 태그 생성하던 것을 div 태그에 그린 후 tag를 복사하는 방법으로 변경
 
+
+## ETC
+
+* ember (js 프레임워크)
