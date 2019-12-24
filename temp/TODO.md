@@ -5,16 +5,16 @@ https://github.com/lukehoban/es6features#destructuring
 
 * arrow function
 
-일반 함수와 함수 축약형으르로 설정시 가장 큰 차이점은 this(Lecical this)부분이며, 대부분 콜백에서 많이 사용, this부분을 사용할 경우 유의 필요
+일반 함수와 함수 축약형으로 설정시 가장 큰 차이점은 this(Lexical this)부분이며, 콜백에서 많이 사용, this부분을 사용할 경우 유의 필요
 
 화살표 함수의 경우 생성자(constructor)를 사용 할 수 없다.
 
 
-* [classes] 
+* classes
   - https://jsdev.kr/t/es6/294
   - https://poiemaweb.com/es6-class
 
-생성자를 사용할 수 있다. 상속을 받을 수 있으며, super.를 사용하여 부모 메소드를 호출
+생성자를 사용할 수 있다. 상속을 받을 수 있으며, super.xxx()를 사용하여 부모 메소드를 호출
 클래스는 선언전에 사용 할 수 없다.
 클래스의 필드는 생성자(constructor) 에서만 가능
 
@@ -139,8 +139,6 @@ child.sayHi();  // Hi! child
 
 백택(\`) 으로 정의. 일반적인 문자열에서는 줄바꿈이 허용되지 않으므로 백슬러시로 시작하는 `이스케이프시퀀스` 사용 + 연산자를 사용하지 않고도 문자열을 만들 수 있는 문자열 인터폴레이션(String interpolation) `${...}` 표현
 
-  
-
 
 * destructuring(디스트럭처링) 
 
@@ -149,7 +147,7 @@ child.sayHi();  // Hi! child
 
 ```javascript
 [x, y, z] = [1,2,3] // x=1, y=2, z=3
-[x, , z] = [1,2,3] // x = 1, z = 3
+[x,  , z] = [1,2,3] // x = 1, z = 3
 [x, y, z=1] = [1,2] // x=1, y=2, z=1
 
 
@@ -310,12 +308,12 @@ console.log(iterator.next()); // {value: undefined, done: true}
 
 (https://poiemaweb.com/es6-iteration-for-of)
 
-* generators
+* generator
 
 ES6에서 도입된 제너레이터(Generator) 함수는 이터러블을 생성하는 함수이다. 제너레이터 함수를 사용하면 이터레이션 프로토콜을 준수해 이터러블을 생성하는 방식보다 간편하게 이터러블을 구현할 수 있다. 또한 제너레이터 함수는 비동기 처리에 유용하게 사용된다
 `제너레이터 함수는 일반 함수와는 다른 독특한 동작을 한다. 제너레이터 함수는 일반 함수와 같이 함수의 코드 블록을 한 번에 실행하지 않고 함수 코드 블록의 실행을 일시 중지했다가 필요한 시점에 재시작할 수 있는 특수한 함수이다`
 
-**제너레이터 함수는 function\* 키워드로 선언한다. 그리고 하나 이상의 yield 문을 포함한다.**
+**제너레이터 함수는 function\* 키워드로 선언한다. 그리고 하나 이상의 yield([jiːld]) 문을 포함한다.**
 
 ```javascript
 // 제너레이터 함수 정의
@@ -373,7 +371,7 @@ console.log(generatorObj.next(3)); // 제너레이터 객체에 3 전달
 */
 ```
 
-**ES7 async/awit 추가**
+**ES7 async/await 추가**
 
 ```javascript
 const fetch = require('node-fetch');
@@ -509,7 +507,10 @@ wm.has(key); // 존재 여부.
 `http://chanlee.github.io/2016/08/15/hello-es6-part-3/`
 `https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap`
 
-* proxies -- todo
+* proxies 
+
+프록시(Proxy)를 사용하면 호스트 객체에 다양한 기능을 추가하여 객체를 생성할 수 있습니다. interception, 객체 추상화, 로깅/수집, 값 검증 등에 사용될 수 있습니다.
+
 * symbol
 
 기존 JS는 6개 타입만 존재 원시타입(String, Number, boolean, null, undefined) + 객체(Object)
@@ -592,13 +593,17 @@ promiseAjax('GET', 'http://jsonplaceholder.typicode.com/posts/1')
 > - pending : 대기 => resolve, reject 호출 전
 > - fulfilled : 비동기 처리가 수행된 상태 => resolve 호출
 > - rejected : 비동기 처리 실패 => reject
-> - settled : 비동기 처리가 수행된 상태 -> resolve 또는 reject 호출
+> - settled(세틀드) : 비동기 처리가 수행된 상태 -> resolve 또는 reject 호출
 
 `Promise.all 메소드는 프로미스가 담겨 있는 배열 등의 이터러블을 인자로 전달 받는다. 병렬 처리. 하나만 실패해도 실패, 전체 성공이 성공`
 `Promise.race 메소드는 Promise.all 메소드와 동일하게 프로미스가 담겨 있는 배열 등의 이터러블을 인자로 전달 받는다. 그리고 Promise.race 메소드는 Promise.all 메소드처럼 모든 프로미스를 병렬 처리하는 것이 아니라 가장 먼저 처리된 프로미스가 resolve한 처리 결과를 resolve하는 새로운 프로미스를 반환한다.`
 
 
 * math + number + string + array + object APIs
+
+iterator.includes('ab'); // true
+'abcdef'.includes('ab'); // true
+
 * binary and octal literals
 * reflect api
 * tail calls
@@ -642,11 +647,10 @@ promiseAjax('GET', 'http://jsonplaceholder.typicode.com/posts/1')
 > 실행 컨텍스트(Execution Context)는 scope, hoisting, this, function, closure 등 동작원리를 담고 있음
 > 함수를 호출하면 실행컨텍스트 스택에 쌓임.
 
+
 1. 스코프 생성 및 초기화
 
 > 스코프 생성 및 초기화 진행
-> arguments 프로퍼티 초기화, 스코프 체인 연결
-> 전역 컨텍스트와 함수 컨텍스트(`Activation Ojbect/ AO- 할성화객체`)는 다른점은 전역의 경우 매개변수와 인자가 없기 때문에 전역에는 arugments Object가 없다. 전역 컨텍스트의 경우 `GO(Global Object)를 가리킴`
 > 스코프 체인은 변수를 검색하기 위한 방식.(식별자 중 변수가 아닌 객체를 검색하는 프로퍼티는 프로토타입 체인)
 > JS엔진은 스코프 체인을 통해 렉시컬 스코프를 파악. 
 > 스코프체인이라는 의미는 해당 변수를 현재 스코프에서 검색 없을 경우 상위 스코프로 올라가면서 찾는 것을 스코프 체인이라고 함.
@@ -659,12 +663,14 @@ promiseAjax('GET', 'http://jsonplaceholder.typicode.com/posts/1')
 > > 1. 매개변수가 인수(arguments)로 선언
 > > 2. 대상 코드에서 함수 선언식이 호이스팅됨(함수 호이스팅)
 > > 3. 변수 호이스팅 (undefined) 됨. var는 선언과 초기화가 같이되어 undfined, let은 선언만 되어 있기 때문에 ref오류.
+> arguments 프로퍼티 초기화, 스코프 체인 연결
+> 전역 컨텍스트와 함수 컨텍스트(`Activation Ojbect/ AO- 할성화객체`)는 다른점은 전역의 경우 매개변수와 인자가 없기 때문에 전역에는 arugments Object가 없다. 전역 컨텍스트의 경우 `GO(Global Object)를 가리킴`
+
 
 
 3. this value 할당
 
-> this value 가 할당되며, this의 경우 호출 패턴에 따라서 결정
-> 
+> this value 가 할당되며, 결정되기 전에는 this는 전역객체를 가르키고 있다가, 호출되는 패턴에 의해 this 값 할당 
 
 ### 변수 생성 단계
 
@@ -988,9 +994,73 @@ module.exports = {
 ## 클라우드 
 AWS  확인 필요
 
-## vue **
+## vuejs **
+
+Templates 형식으로 앱 제작 Vue 앱에서는 HTML 파일에 마크업을 작성하는게 기본, `{{}}`
+
+Directive 를 이용하여 Template 기능 확장 가능   
+v-on:click ... 로 시작.
+Vue2.x부터는 render() 모두 지원
+Template와 Render Function 모두 사용 가능
+간단한 프로젝트 설정
+빠른 렌더링
+
+```html
+<div id="app">
+  <p>{{ message }}</p>
+  <button v-on:click="reverseMessage">Reverse Message</button>
+</div>
+```
+```javascript
+new Vue({
+  el: '#app',
+  data: {
+    message: 'Hello Vue.js!'
+  },
+  methods: {
+    reverseMessage: function () {
+      this.message = this.message.split('').reverse().join('');
+    }
+  }
+});
+```
+```javascript
+<p>Using mustaches: {{ rawHtml }}</p>
+<p>Using v-html directive: <span v-html="rawHtml"></span></p> //HTML 출력
+
+// !! 속성 변경
+<div v-bind:id="dynamicId"></div> // ID에 dynamicID가 자동 변경됨
+<button v-bind:disabled="isButtonDisabled">Button</button>
+
+// if 문
+<p v-if="seen">이제 나를 볼 수 있어요</p>
+
+```
+
+// 컴포넌트 사용
+```javascript
+var ComponentA = { /* ... */ }
+
+var ComponentB = {
+  components: {
+    'component-a': ComponentA
+  },
+  // ...
+}
+```
+
+
+
+
 ## react **
 > Redux , Flux, ReactNative
+
+Web과 native 앱 개발에 모두 가능
+Virtual DOM으로 빠른 랜더링
+경량 라이브러리
+Service Side 랜더링
+라우터
+
 ## TypeScript
 
 
