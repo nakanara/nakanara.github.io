@@ -266,10 +266,15 @@ const 상수 - 재할당 금지
 
 * iterators + for…of
 
-이터레이션 프로토콜을 준수한 객체는 for…of 문으로 순회할 수 있고 Spread 문법의 피연산자가 될 수 있다.
-이터레이션 프로토콜에는 `이터러블 프로토콜(iterable protocol)`과 `이터레이터 프로토콜(iterator protocol)`이 있다.
+이터러블 프로토콜을 준수한 객체는 for…of 문으로 순회할 수 있고 Spread 문법의 피연산자가 될 수 있다.
+이터러블 프로토콜에는 `Symbol.iterator 이터레이터 심볼 매소드를 구현하였거나 상속`되어야 한다.
 
-이터레이터를 이용하여 디스트럭처링(변수 분활), spend, for ... of, map/set 생성자 에서 사용
+이터레이터 프로토콜은 `next 메소드 소유` 이터러블을 순환하며 value, done 값을 돌려준다.
+
+이터레이터를 이용하여 디스트럭처링(변수 분활), spread, for ... of, map/set 생성자 에서 사용
+
+for ... in 은 속성을 반복하며, 
+hasOwnProperty 나의 속성인지 판단
 
 **이터러블**
 ```javascript
@@ -458,51 +463,51 @@ console.log(new P('Kim')); // Person { name: 'Kim' }
 * map + set + weakmap + weakset
 
 * * Sets
-> 자료형에 관계 없이 원시 값과 객체 참조 모두 유일한 값을 저장
-var s = new Set();
-s.add('hello').add('goodbye').add('hello');
-s.size === 2
-s.has('hello') === true;
-s.clear() ; // 모든 요소 제거
-s.delete(value); // 해당 요소 제거
-s.entries(); // 삽입순으로 [value, value] 로 되는 iterator 객체 반환
-s.forEach();
-s.keys();
+> 자료형에 관계 없이 원시 값과 객체 참조 모두 유일한 값을 저장  
+var s = new Set();  
+s.add('hello').add('goodbye').add('hello');  
+s.size === 2   
+s.has('hello') === true;  
+s.clear() ; // 모든 요소 제거  
+s.delete(value); // 해당 요소 제거  
+s.entries(); // 삽입순으로 [value, value] 로 되는 iterator 객체 반환  
+s.forEach();  
+s.keys();  
 s.values();
 
 
 * * Map
-> 키-값을 기억하며, 삽입 순서도 기억.(Object는 삽입 순서 아님)
-> new Map([iterable]) // 요소가 Key-value 으로 구성된것은 Map에 초기화.
-> Object에서는 키에 String, symbol을 사용할 수 있지만, Map은 함수, 객체, 원시 자료형 등 어떤 값도 사용 가능
-> Map은 size로 쉽게 크기 판단.
-var m = new Map();
-m.set('hello', 42);
-m.set(s, 34);
-m.set(s) == 34;
-m.keys(); // Key itrate
-m.values(); // value itertor
-m.size // length
-m.delete(key);
-m.clear();
-m.has(key);
-for(let [key, val] of m.entries()) { // [key, value] 로 반환
-  ...
-}
+> 키-값을 기억하며, 삽입 순서도 기억.(Object는 삽입 순서 아님)  
+> new Map([iterable]) // 요소가 Key-value 으로 구성된것은 Map에 초기화.  
+> Object에서는 키에 String, symbol을 사용할 수 있지만, Map은 함수, 객체, 원시 자료형 등 어떤 값도 사용 가능  
+> Map은 size로 쉽게 크기 판단.  
+var m = new Map();    
+m.set('hello', 42);  
+m.set(s, 34);  
+m.set(s) == 34;  
+m.keys(); // Key itrate  
+m.values(); // value itertor  
+m.size // length  
+m.delete(key);  
+m.clear();  
+m.has(key);  
+for(let [key, val] of m.entries()) { // [key, value] 로 반환  
+  ...  
+}  
 m.forEach(callbackfn)
 
 * * WeakMap 
-> 키가 약하게 참조되는 키/값 컬렉션. - 키는 객체여야 함(오직 Object) 원시 데이터를 key로 허용하지 않음.
-> weakMap 내 키는 약하게 유지, 다른 강한 키 참조가 없는 경우 , 모든 항목은 가비지 컬렉터에 의해 weakmap에서 제거
-> 열거불가, 키 목록을 제공하는 메서드가 없음.
+> 키가 약하게 참조되는 키/값 컬렉션. - 키는 객체여야 함(오직 Object) 원시 데이터를 key로 허용하지 않음.  
+> weakMap 내 키는 약하게 유지, 다른 강한 키 참조가 없는 경우 , 모든 항목은 가비지 컬렉터에 의해 weakmap에서 제거  
+> 열거불가, 키 목록을 제공하는 메서드가 없음.  
 
 var wm = new WeakMap();
 
-wm.length 
-wm.delete(key)
-wm.get(key);
-wm.has(key); // 존재 여부.
-// wm.clear(); 없음.
+wm.length   
+wm.delete(key)  
+wm.get(key);   
+wm.has(key); // 존재 여부.  
+// wm.clear(); 없음.  
 
 `http://chanlee.github.io/2016/08/15/hello-es6-part-3/`
 `https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap`
@@ -513,10 +518,10 @@ wm.has(key); // 존재 여부.
 
 * symbol
 
-기존 JS는 6개 타입만 존재 원시타입(String, Number, boolean, null, undefined) + 객체(Object)
-Symbol 타입 추가(`변경 불가능한 원시타입`)
-심볼은 이름 충돌이 없는 유일한 객체의 프러퍼티를 만둘기 위함
-심볼 생성은 new Symbol() 하지 않음.
+기존 JS는 6개 타입만 존재 원시타입(String, Number, boolean, null, undefined) + 객체(Object)  
+Symbol(`변경 불가능한 원시타입`)  추가  
+심볼은 이름 충돌이 없는 유일한 객체의 프러퍼티를 만둘기 위함  
+심볼 생성은 new Symbol() 하지 않음.  
 
 
 ```javascript
@@ -601,8 +606,8 @@ promiseAjax('GET', 'http://jsonplaceholder.typicode.com/posts/1')
 
 * math + number + string + array + object APIs
 
-iterator.includes('ab'); // true
-'abcdef'.includes('ab'); // true
+iterator.includes('ab'); // true  
+'abcdef'.includes('ab'); // true  
 
 * binary and octal literals
 * reflect api
@@ -747,8 +752,27 @@ var HTMLChanger = (function() {
 HTMLChanger.callChangeHTML(); // Outputs: 'contents' 
 console.log(HTMLChanger.contents); // undefined
 ```
+#### 즉시객체 초기화
+http://www.nextree.co.kr/p7650/
 
+```javascript
+({
+    // 속성 정의
+    name: "nextree",
 
+    // 객체 메소드 정의
+    getName: function () {
+        return this.name;
+    },
+
+    // 초기화 메소드 정의
+    init: function () {
+        console.log(this.getName());   // nextree 출력
+    }
+}).init();
+```
+
+> 또 한가지 고려해야 할 것은, 즉시 실행 함수와 즉시 객체 초기화의 남용으로 인한 메모리 낭비입니다. JavaScript는 이렇게 할당이 없이 정의만 할 경우, 전역 네임스페이스는 건드리지 않더라도, 전역 실행 컨텍스트(EC: Execution Context)의 temp=[]내에 key-value를 추가하게 됩니다. 이 EC.temp영역은 개발자가 접근할 수 없는 영역입니다. 그렇기 때문에 스크립트 내의 다른 영역은 물론 어디에서도 접근할 수 없어, 소스코드의 신뢰성에는 큰 도움이 됩니다. 하지만 같은 이유로 이 패턴을 남용하면, 직접 관리 할 수 없는 공간에 메모리가 계속 쌓이게 됩니다. 그렇기 때문에 소스코드의 신뢰성과 메모리의 문제를 함께 고민해서, 이를 남용하지 않고 적절히 사용해야 합니다.
 
 #### Observer  패턴
 
@@ -797,9 +821,66 @@ var printer = (function () {
 var officePrinter = printer.getInstance();
 
 ```
+#### 샌드박스패턴
+
+> 샌드박스는 본래, 말 그대로 어린이가 안에서 노는 모래 놀이 통을 의미합니다. 모래를 담은 상자에는 그 상자 밖으로 모래를 흘리거나 더럽히지 말고 그 안에서는 맘껏 놀라는 의미가 담긴 것입니다. JavaScript 샌드박스 패턴도 본래의 의미와 같이 코드들이 전역 범위를 더럽히지 않고 맘껏 쓰일 수 있도록 유효 범위를 정해줍니다.
+> 
+> 위에서 살펴 보았던 네임스페이스 패턴에서는 단 하나의 전역 객체를 생성했습니다. 샌드박스 패턴에서는 생성자를 유일한 전역으로 사용합니다. 그리고 유일한 전역인 생성자에게 콜백 함수(Callback function)를 전달해 모든 기능을 샌드박스 내부 환경으로 격리 시키는 방법을 사용합니다.
+
+```javascript
+function Sandbox() {  
+        // argument를 배열로 바꿉니다.
+    var args = Array.prototype.slice.call(arguments),
+        // 마지막 인자는 콜백 함수 
+        callback = args.pop(),
+        // 모듈은 배열로 전달될 수도있고 개별 인자로 전달 될 수도 있습니다.
+        modules = (args[0] && typeof args[0] === "string") ? args : args[0],
+        i;
+
+    // 함수가 생성자로 호출되도록 보장(new를 강제하지 않는 패턴)
+    if (!(this instanceof Sandbox)) {
+        return new Sandbox(modules, callback);
+    }
+
+    // this에 필요한 프로퍼티들을 추가
+    this.a = 1;
+    this.b = 2;
+
+    // "this객체에 모듈을 추가"
+    // 모듈이 없거나 "*"(전부)이면 사용 가능한 모든 모듈을 사용한다는 의미입니다.
+    if (!modules || modules === '*' || modules[0] === '*') {
+        modules = [];
+        for (i in Sandbox.Modules) {
+            if (Sandbox.modules.hasOwnProperty(i)) {
+                modules.push(i);
+            }
+        }
+    }
+
+    // 필요한 모듈들을 초기화
+    var m_length = modules.length;
+    for (i=0; i<m_length; i+=1) {
+        Sandbox.modules[modules[i]](this);
+    }
+
+    // 콜백 함수 호출
+    callback(this);
+}
+
+// 필요한 프로토타입 프로퍼티들을 추가
+Sandbox.prototype = {  
+    name: "nextree",
+    getName: function () {
+        return this.name;
+    }
+};
+```
+
 ### 클로저
 
-외부 실행 컨텍스트가 사라져도 참조가 되어있다면, 실행 환경은 유지되는 것이 클로저, 클로저를 이용하여 모듈 구현
+렉시컬 환경으로 실행되어서 외부 실행 컨텍스트가 사라져도 내부 실행 컨텍스트에서 참조되고 있다면 실행환경유 유지되는 것을 말합니다.
+
+외부 실행 컨텍스트가 사라져도 내부 컨텍스트에 참조가 되어있다면, 실행 환경이 유지되는 것을 클로저, 클로저를 이용하여 모듈 구현
 `클로저는 함수와 그 함수가 선언되었을 때의 렉시컬 환경 조합`
 
 
@@ -810,9 +891,9 @@ var officePrinter = printer.getInstance();
 
 
 
-## 웹브라우저 실행 순서
 
-* 웹 성능 향상 방법
+
+## 웹 성능 향상 방법
   * HTTP 요청 최소화
     * https://wikibook.co.kr/article/web-sites-optimization-1/
     * css 스프라이트 기법 (여러 이미지 파일 하나로 합치는)
@@ -828,6 +909,8 @@ var officePrinter = printer.getInstance();
 
 * 랜더링 성능 향상
   * https://wikibook.co.kr/article/web-sites-optimization-3/
+
+
 > 브라우저가 화면을 보여주는 순서    
 > 1. HTML, DOM 트리를 요청하면 네트워크를 통해 마크업을 받아 옴, 파싱을 진행, DOM Tree 생성
 > 2. 랜더트리(DOM + Style) 구성을 위해 바로 화면에 나타나지 않고, DOM 트리 구성 후 스타일 규칙을 적용하여 랜더트리(Render Tree) 구성
@@ -846,12 +929,16 @@ var officePrinter = printer.getInstance();
 > 이미지를 너무 크지 않게 한다.
 * * 이미지를 너무 크지 않게 한다.
 
+## 웹브라우저 실행 순서
 
 ## 브라우저 동작 방법
 
 
 ## 도커
+-- todo
+
 ## 쿠버네틱스 K8S
+-- todo
 
 ## 바벨 **
 
@@ -882,7 +969,7 @@ var officePrinter = printer.getInstance();
 ```
 
 > Promise, Object.assign, Array.from 등과 같이 ES5 이하로 대체할 수 없는 기능은 트랜스파일링이 되지 않는다.
-따라서 오래된 브라우저에서도 ES6+에서 새롭게 추가된 객체나 메소드를 사용하기 위해서는 @babel/polyfill을 설치해야 한다
+따라서 오래된 브라우저에서도 ES6+에서 새롭게 추가된 객체나 메소드를 사용하기 위해서는 @babel/polyfill을 설치해야 한다!!
 
 > $ npm install @babel/polyfill
 
@@ -900,7 +987,7 @@ module.exports = {
 
 ## 웹팩 **
 
-`의존 관계에 있는 모듈들을 하나의 자바스크립트 파일로 번들링하는 모듈 번들러이다`. Webpack을 사용하면 의존 모듈이 하나의 파일로 번들링되므로 별도의 모듈 로더가 필요없다. 그리고 다수의 자바스크립트 파일을 하나의 파일로 번들링하므로 html 파일에서 script 태그로 다수의 자바스크립트 파일을 로드해야 하는 번거로움도 사라진다
+`의존 관계에 있는 모듈들을 하나의 자바스크립트 파일로 번들링하는 모듈 번들러이다`. Webpack을 사용하면 의존 모듈이 하나의 파일로 번들링되므로 별도의 모듈 로더가 필요 없고, 그리고 다수의 자바스크립트 파일을 하나의 파일로 번들링하므로 html 파일에서 script 태그로 다수의 자바스크립트 파일을 로드해야 하는 번거로움 및 속도가 개선.
 
 바벨 로더. 설치 
 > $ npm install --save-dev babel-loader
@@ -943,7 +1030,11 @@ module.exports = {
 
 **SASS 로더**
 
+Sass(Syntactically Awesome StyleSheets)  
 node-sass는 node.js 환경에서 사용할 수 있는 Sass 라이브러리이다. 실제로 Sass를 css로 컴파일하는 것은 node-sass이다. style-loader, css-loader, sass-loader는 Webpack 플러그인이다.
+
+-- todo sass 문법
+
 
 >$ npm install node-sass style-loader css-loader sass-loader --save-dev
 
@@ -1065,7 +1156,11 @@ Service Side 랜더링
 
 
 ## node.js **
+
+* npm
+
 ## sass **
+
 
 ## 엘라스틱서치
 제품군으로는 엘라스틱서치, 로그스테쉬로 구성되어 있으며, 설정을 진행할 수 있는 화면 제품으로 Kibana 존재, 데이터를 가져오기 위한 beats 제품군이 있으며 그 기능에 따라 이름이 존재 함.
@@ -1088,13 +1183,60 @@ Service Side 랜더링
 
 
 
+## java8 
 
+script engine
+```java
+ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn"); //  --- (1)
+engine.eval("print('Hello World');");
+```
+
+// javascript의 함수를 java에서 호출
+```java
+ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+engine.eval(new FileReader("example.js"));
+// cast the script engine to an invocable instance
+Invocable invocable = (Invocable) engine;
+Object result = invocable.invokeFunction("sayHello", "John Doe");
+System.out.println(result);
+System.out.println(result.getClass());
+// Hello, John Doe!
+// hello from javascript
+// class java.lang.String
+```
+
+javascript에서 java호출
+```java
+package my.package;
+
+public class MyJavaClass {
+    public static String sayHello(String name) {
+        return String.format("Hello %s from Java!", name);
+    }
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+```
+
+```java
+var MyJavaClass = Java.type('my.package.MyJavaClass');
+// call the static method
+var greetingResult = MyJavaClass.sayHello('John Doe');
+print(greetingResult);
+// create a new intance of MyJavaClass
+var myClass = new MyJavaClass();
+var calcResult = myClass.add(1, 2);
+print(calcResult);
+// Hello John Doe from Java!
+// 3
+```
 ## Grafana
 
 ## 코딩테스트
 
 - position을 고정으로 잡기 위해서 fixed 를 사용하여 전체 영역을 잡았으며,
-그 상단에 relact를 이용하여 top 50%로 중앙을 잡고, margin: 0 auto를 사용하여 중앙을 잡았음.
+그 상단에 relact 를 이용하여 top 50%로 중앙을 잡고, margin: 0 auto를 사용하여 중앙을 잡았음.
 
 - css로 zindex 설정한 것을 style로 가져오지 못한점에 대해서` document.defaultView.getcomputedStyle(el, null).getPropertyValue('z-index');` 로 가져 옴
 
@@ -1108,7 +1250,7 @@ Service Side 랜더링
 * TC39 프로세스
 > TC39 프로세스는 ECMA-262 명세(ECMAScript)에 새로운 표준 사양(제안. Proposal)을 추가하기 위해 공식적으로 명문화해 놓은 과정을 말한다. TC39 프로세스는 0 단계부터 4 단계까지 총 5개의 단계로 구성되어 있고 상위 단계로 승급하기 위한 명시적인 조건들이 존재한다. 승급 조건을 충족시킨 제안(Proposal)은 TC39의 동의를 통해 다음 단계(Stage)로 승급된다. TC39 프로세스는 아래의 단계를 거쳐 최종적으로 ECMA-262 명세(ECMAScript)의 새로운 표준 사양이 된다.
 
-stage 0: strawman => stage 1: proposal => stage 2: draft => stage 3: candidate => stage 4: finished
+stage 0: strawman => stage 1: proposal => stage 2: draft => stage 3: candidate(캔티데드) => stage 4: finished
 
 * 오버라이딩(Overriding)
 > 상위 클래스가 가지고 있는 메소드를 하위 클래스가 재정의하여 사용하는 방식이다.
@@ -1118,3 +1260,43 @@ stage 0: strawman => stage 1: proposal => stage 2: draft => stage 3: candidate =
 
 ## 확인 필요
 Object.assign, Array.form (배열 일차원) -- todo
+
+* HTTP HyperText Transfer Protocol
+
+* html5 선언 방식
+```html
+<!DOCTYPE html>
+```
+* meta tag
+viewport: 모바일에서 사용 1:1비율 스케일과 크기. 
+X-UA-Compatible = IE=edag // IE8 이상 최신 브라우저로 랜더링
+keywords // 검색엔진 사용 단어
+description // 검색엔진 설명
+roobots// all 기본, none, index(해당 페이지 수집), follow(해당 페이지 포함 링크까지 수집), noindex(페이지 수집 제외), nofllow(링크 수집 제외)
+expries // 캐쉬 만료일
+og(Open Graph) // 오픈그래프, 
+og:title // 제목
+og:type // website
+og:site_name // 사이트 명
+og:description
+og:url
+
+
+## SEO (Search Engine Optimization) 검색엔진 최적화
+-- todo tag 파악
+
+* SPA(Single page application)
+-- 장단점 파악
+
+* SEO(Search Engine Optimization) // 검색엔진 최적화 (옵티미제이션)
+* SSR(Server side render)
+* next.js
+* flow
+* prettier ( 코드 스타일)
+* axios (react ajax)
+* 리터럴 객체 `{key:value}` 로 구성된 객체
+* void 
+> void 연산자는 뒤에 나타나는 표현식을 실행하고 undefined 를 돌려줌
+
+
+### css 문법 
