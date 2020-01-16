@@ -1141,8 +1141,6 @@ var ComponentB = {
 ```
 
 
-
-
 ## react **
 > Redux , Flux, ReactNative
 
@@ -1151,6 +1149,7 @@ Virtual DOM으로 빠른 랜더링
 경량 라이브러리
 Service Side 랜더링
 라우터
+redux(리덕스): 상태 변화관리
 
 ## TypeScript
 
