@@ -47,3 +47,58 @@ var app = new Vue({
 3. Init injections & reactivity
 [Life Cycle](https://kr.vuejs.org/v2/guide/instance.html)
 
+
+## 분석
+
+- boolean isUnder() : undefined 여부
+- boolean isDef() : !undefined
+- boolean isTrue(): true 여부
+- boolean isFalse() : false 여부
+- boolean isPrimitive(value): 원시 객체 string, number, sysbol, boolean
+- boolean isObject(obj) : Object 여부
+- _toString : Object.prototype.toString
+- string toRawType(value): _toString.call(value).slice(8, -1) ==> [Object Object] => Object
+- isPlainObject(obj): Object 여부
+- isRegExp(v): [Object RegExp] 여부
+- isValidArrayIndex: Index 존재 여부, isFinite() 사용
+- isPromise(val): 값이 있고, then, catch 가 있는지.
+- toString(val) : toString
+- toNumber(val): isNaN
+- makeMap(str, expectsLowerCase): 문자열을 ,로 짜른후 map에 Key로 담아서 돌려 줌. expectsLowerCase(대소문자 구분)
+- isBuiltInTag : Tag 맵 (makeMap 이용)
+- isReservedAttribute: 필요 속성 맵 생성(makeMap 이용)
+- remove(arr, item): Array 값 제거
+```js
+function remove (arr, item) {
+    if (arr.length) {
+      var index = arr.indexOf(item);
+      if (index > -1) {
+        return arr.splice(index, 1)
+      }
+    }
+```
+ - hasOwnProperty = Object.prototype.hasOwnProperty : 
+ - hasOwn(obj, key) : 자기 속성여부 파악
+ - cached(fn): 함수에 대한 캐쉬를 생성 후 담아둠 (메모제이션)
+ ```js
+   function cached (fn) {
+    var cache = Object.create(null);
+    return (function cachedFn (str) {
+      var hit = cache[str];
+      return hit || (cache[str] = fn(str))
+    })
+  }
+  ```
+  - camelizeRE = /-(\w)/g : 문자열 reg exp
+  - camelize: 문자앞 - 제거 (cached 사용)
+  - hyphenateRE = /\B([A-Z])/g; : \B (문자가 아닌경우) 후 대문자.
+  - hyphenate : 
+  ```
+  var hyphenate = cached(function (str) {
+    return str.replace(hyphenateRE, '-$1').toLowerCase()
+  });
+  ```
+  - polyfillBind: todo
+
+## 확인
+isFinite() ?
