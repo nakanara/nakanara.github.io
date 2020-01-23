@@ -261,6 +261,8 @@ function def (obj, key, val, enumerable) {
 - _isServer: 서버 모드 여부
 - isServerRendering:  서버 모드 여부. SSR
 - devtools : DEV Tools
+- isNative: Native 함수 여부
+- hasSymbol: 심볼여부
 
 
 
@@ -282,6 +284,21 @@ function def (obj, key, val, enumerable) {
 - mustUseProp(no)
 - async(true)
 - _lifecycleHooks: LIFECYCLE_HOOKS
+- _Set: Set fn 존재 여부.없다면 동일 기능 생성
+- warn=noop
+- tip=noop
+- generateComponentTrace(noop)
+- formatComponntName(noop)
+- hasConsole: 콘솔 여부
+- classifyRE: 
+```js
+classifyRE = /(?:^|[-_])(\w)/g;
+```
+- classify:
+- warn: 로그 출력
+- tip : 로그 출력
+- formatComponentName: 
+
 
 
 
@@ -289,3 +306,6 @@ function def (obj, key, val, enumerable) {
 
 ## 확인
 isFinite() ?
+Reflect: 
+> https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Reflect
+> 중간에서 가로챌 수 있는 JavaScript 작업에 대한 메소드 제공 객체, 프록시 처리기와 동일
