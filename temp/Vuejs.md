@@ -297,8 +297,20 @@ classifyRE = /(?:^|[-_])(\w)/g;
 - classify:
 - warn: 로그 출력
 - tip : 로그 출력
-- formatComponentName: 
-
+- formatComponentName: Component명을 돌려준다.
+> vm.$root === vm 같다면 return <root>
+- repeat: 반복하는 부분
+```js
+var repeat = function (str, n) {
+      var res = '';
+      while (n) {
+        if (n % 2 === 1) { res += str; }
+        if (n > 1) { str += str; }
+        n >>= 1;
+      }
+      return res
+    };
+```
 
 
 
