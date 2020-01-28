@@ -311,7 +311,9 @@ var repeat = function (str, n) {
       return res
     };
 ```
-
+- generateComponentTrace : 오류 tree구조
+- Dep : 깊은 구조
+- 
 
 
 
