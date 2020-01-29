@@ -716,7 +716,13 @@ var modal = (function(){
 ```
 
 
-### 패턴(Scope-Safe Constructor) ??
+### 패턴(Scope-Safe Constructor) 
+
+> **네임스페이스란** 수많은 함수, 객체, 변수들로 이루어진 코드가 전역 유효범위를 어지럽히지 않고, 애플리케이션이나 라이브러리를 위한 하나의 전역 객체를 만들고 모든 기능을 이 객체에 추가하는 것을 말합니다  
+코드에 네임스페이스를 지정해주며, 코드 내의 이름 충돌뿐만 아니라 이 코드와 같은 페이지에 존재하는 또 다른 자바스크립트 라이브러리나 위젯등 서드파티 코드와의 이름 충돌도 미연에 방지해 주는 것입니다  
+출처: https://webclub.tistory.com/5 [Web Club]  
+네임스페이스 모듈이란 하나의 대표적 객체명 아래 필요한 변수, 객체, 함수를 모아두는 패턴이며, 네임스페이스 아래 집합되어 있으며로 전역 컨텐스트를 어지럽히지 않는 장점이 있다.
+
 
 #### Module 패턴
 (https://itstory.tk/entry/%EA%BC%AD-%EC%95%8C%EC%95%84%EC%95%BC%ED%95%98%EB%8A%94-Javascript-%EB%94%94%EC%9E%90%EC%9D%B8-%ED%8C%A8%ED%84%B4-4%EA%B0%80%EC%A7%80)
@@ -752,6 +758,29 @@ var HTMLChanger = (function() {
 HTMLChanger.callChangeHTML(); // Outputs: 'contents' 
 console.log(HTMLChanger.contents); // undefined
 ```
+
+단점
+> - 전체적으로 코드량이 약간 더 많아지고 따라서 다운로드해야 하는 파일크기도 늘어난다.
+> - 전역 인스턴스가 단 하나뿐이기 때문에 코드의 어느 한 부분이 수정되어도 전역 인스턴스를  수정하게 된다. 
+> 즉, 나머지 기능들도 갱신된 상태를 물려받게 된다.
+
+장점
+> - 점점 더 늘어만 가는 코드를 정리할때 널리 사용되며 자바스크립트 코딩패턴에서 널리 권장되는 방법이기도 하다
+> - 전역 컨텍스트를 어지럽히지 않음.
+
+
+### 의존관계 설정
+```javascript
+var myFunction = function () { 
+  // 의존 관계에 있는 모듈들 
+  var event = YAHOO.util.Event, 
+    dom = YAHOO.util.Dom; 
+    // 이제 event 와 dom 이라는 변수를 사용한다... 
+};
+
+함수의 첫 번째에 의존관계를 선언하는 것은 의존관계를 파악하는데 편리하고, 해당 변수를 접근하는데 지역변수가 빠름
+```
+
 #### 즉시객체 초기화
 http://www.nextree.co.kr/p7650/
 
@@ -876,6 +905,50 @@ Sandbox.prototype = {
 };
 ```
 
+### prototpye
+https://poiemaweb.com/js-prototype
+
+
+> 부모객체인 Person 함수 영역의 this를 Korean 함수 안의 this로 바인딩합니다. 이것은 부모의 속성을 자식 함수 안에 모두 복사합니다. 객체를 생성하고, name을 출력합니다. 객체를 생성할 때 넘겨준 인자를 출력하는 것을 볼 수 있습니다. 기본 방법에서는 부모객체의 멤버를 참조를 통해 물려받았습니다. 하지만 생성자 빌려 쓰기는 부모객체 멤버를 복사하여 자신의 것으로 만들어 버린다는 차이점이 있습니다. 하지만 이 방법은 부모객체의 this로 된 멤버들만 물려받게 되는 단점이 있습니다. 그래서 부모객체의 프로토타입 객체의 멤버들을 물려받지 못합니다. 위 그림 8 그림을 보시면 kor1 객체에서 부모객체의 프로토타입 객체에 대한 링크가 없다는 것을 볼 수 있습니다.
+* 생성자 빌려쓰기
+
+http://www.nextree.co.kr/p7323/
+```javascript
+function Person(name) {  
+    this.name = name || "혁준"; }
+
+Person.prototype.getName = function(){  
+    return this.name;
+};
+
+function Korean(name){  
+    Person.apply(this, arguments);
+}
+Korean.prototype = new Person();
+
+var kor1 = new Korean("지수");  
+console.log(kor1.getName());  // 지수 
+```
+
+* 생성자와 프로토 타입 지정
+
+```javascript
+function Person(name) {  
+    this.name = name || "혁준"; }
+
+Person.prototype.getName = function(){  
+    return this.name;
+};
+
+function Korean(name){  
+    Person.apply(this, arguments);
+}
+Korean.prototype = new Person();
+
+var kor1 = new Korean("지수");  
+console.log(kor1.getName());  // 지수 
+```
+
 ### 클로저
 
 렉시컬 환경으로 실행되어서 외부 실행 컨텍스트가 사라져도 내부 실행 컨텍스트에서 참조되고 있다면 실행환경유 유지되는 것을 말합니다.
@@ -989,6 +1062,9 @@ module.exports = {
 
 `의존 관계에 있는 모듈들을 하나의 자바스크립트 파일로 번들링하는 모듈 번들러이다`. Webpack을 사용하면 의존 모듈이 하나의 파일로 번들링되므로 별도의 모듈 로더가 필요 없고, 그리고 다수의 자바스크립트 파일을 하나의 파일로 번들링하므로 html 파일에서 script 태그로 다수의 자바스크립트 파일을 로드해야 하는 번거로움 및 속도가 개선.
 
+웹팩의 옵션은 오른쪽에서 왼쪽으로 진행.
+
+
 바벨 로더. 설치 
 > $ npm install --save-dev babel-loader
 
@@ -1027,6 +1103,13 @@ module.exports = {
   mode: 'development'
 };
 ```
+
+웹팩 사용중 모듈화 된 파일의 용량이 큰 경우 코드 스플릿(코드를 나누어)하여 필요한 시점에서 로딩하는 방식으로 할 경우 네트워크 요처이 늘어남, 하지만 캐시를 이용하여, 파일명 뒤에 checksum을 붙여 변경시 새로 로딩되도록 하는 방법도 존재
+
+
+> entry: 웹팩이 파일을 읽을 시작점
+> 로더 : 파일을 읽어서 모듈화하는 기능
+> 
 
 **SASS 로더**
 
@@ -1151,6 +1234,13 @@ Virtual DOM으로 빠른 랜더링
 경량 라이브러리
 Service Side 랜더링
 라우터
+JSX 자바스크립트 문법 확장
+
+props // 부모로부터 물려받은 속성 값, 이를 통해 보모와 소통, prope는 부모가 변경시 자동 변경
+status // 내부 값, 변경시 setState를 해야 함.
+defaultProps // props의 기본 값
+
+
 
 ## TypeScript
 
