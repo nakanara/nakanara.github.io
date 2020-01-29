@@ -1224,8 +1224,6 @@ var ComponentB = {
 ```
 
 
-
-
 ## react **
 > Redux , Flux, ReactNative
 
