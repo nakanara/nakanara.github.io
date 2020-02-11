@@ -110,6 +110,23 @@ Content-Security-Policy:
 
 ### 보안 계층 2: 클라우드 인프라 보호하기
 
+**SSH**: SSH 프로토콜의 첫 번째 버전은 90년대 중반 헬싱키 대학의 타투 일료넨(Tatu ylonen)이 개발, 일료넨은 독점 라이선스 하에 원래 SSH코드를 유지했으며, 그에 따라 OpenBSD 프로젝트가 90년대 후반 OpenSSH라는 오픈 소스 버전으로 개발 사용.
+
+```sh
+$ ssh-keygen -t rsa \
+-f ~/.ssh/id_rsa_$(whoami)_$(date+%Y-%m-%d) \
+-C "$(whoami)'s bastion key"
+Generation public/private rsa key pair
+Enter passphrase (emtpy for passphrase): # 비밀키를 보호하려면 항상 암호 사용.
+Enter same passphrase again:
+Your identification has been saved in ~/.ssh/id_rsa_sma_2020-02-11.
+Your public key has been saved in ~/.ssh/id_rsa_sma_2020-02-11.pub.
+```
+
+> SSH 키 알고리즘: 최신 SSH 시스템일 경우 RSA 대신 ed2519 알고리즘 사용, ed2519의 키는 RSA보다 휠씬 작으며, 더 높은 수준은 아니지만 동등한 보안 수준을 제공
+
+* 
+
 
 ### 보안 계층 3: 통신 보안
 ### 보안 계층 4: 전달 파이프라인 보안
