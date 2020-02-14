@@ -162,14 +162,29 @@ Your public key has been saved in ~/.ssh/id_rsa_sma_2020-02-11.pub.
 
 * SSL과 TLS
 
-* HTTPS를 사용하는 애플리케이션 가져오기
-
+* HSTS: Strict Transport Security 
+서비스가 항상 HTTPS를 사용하도록 수성되면 안전하지 않은 HTTP로 되돌아갈 이유가 없어야 한다. HTTP Strict Transport Security(HSTS)는 서비스가 항상 HTTPS 를 사용하도록 브라우저에 보낼 수 있는 HTTP헤더.
 
 ### 보안 계층 4: 전달 파이프라인 보안
 
 ## 2부 이상징후 발견과 공격으로부터의 서비스 보호
+
 ### 로그 수집 및 저장하기
+
+참고
+ * 프로메테우스 https://prometheus.io
+ * 그라파나: http://grafana.org
+
+명령어
+ * grep, awk, sed, cut
+
+
 ### 부정행위와 공격에 대한 로그 분석
+
+로그 분석
+ * Hindsight(http:/mng.bz/m4gg)
+> 데이터 스트림에서 분석 플러그인을 실행하도록 설계
+
 ### 침입 탐지
 ### 캐리비안 침해 사고: 침해 사고 대응 사례 연구
 
