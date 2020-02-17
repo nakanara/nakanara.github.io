@@ -185,6 +185,18 @@ Your public key has been saved in ~/.ssh/id_rsa_sma_2020-02-11.pub.
  * Hindsight(http:/mng.bz/m4gg)
 > 데이터 스트림에서 분석 플러그인을 실행하도록 설계
 
+ * 슬라이딩 윈도와 원형 버퍼
+> 제한 사항을 위반하는 클라이언트를 탐지하려면 일정 기간 동안 각 클라이언트가 보낸 요청을 계산해야 한다.
+클라이언트가 최근 8분 동안 보낸 요청을 현재의 분 단위로 세고, 클라이언트가 해당 기간 동안 x개 이상의 요청을 보내면 경고를 유발을 가정해 보자
+이러한 접근 방식을 `슬라이딩 윈도`  구현하려면 주어진 분 내에 수신된 모든 요청을 계산하고 그 값이 저장해야 마지막 8분 동안의 총량을 계산할 수 있다. 시간이 1분씩 진행되며 가장 오래된 값을 삭제하고 새 값을 추가해 윈도를 효과적으로 앞으로 이동
+
+* 이동 평균(Moving Averages)
+> 트래픽을 비교하여, 평균보다 두 세배 이상 더 많은 트래픽을 보내는 클라이언트를 발견하면 의심스러운 것으로 플래그를 지정
+
+* 지리 데이터를 사용해 악용 사례 찾기
+> 사용자 지오프로파일링(Geoprofiling) 접속자의 지리적 프로파일을 유지하고, 이를 데이터베이스에 저장
+  - 지리정보 : Maxmind의 GeoIP City 데이터 베이스(http://mng.bz/8U91)
+  - 거리 계산: IP 주소의 위도와 경도를 알아내면 일반 연결 영역에서 얼마나 멀리 떨어져있는지 계산, 아버사인 공식(haversing formula)(http://mng.bz/mkO0)
 ### 침입 탐지
 ### 캐리비안 침해 사고: 침해 사고 대응 사례 연구
 
@@ -201,3 +213,4 @@ Your public key has been saved in ~/.ssh/id_rsa_sma_2020-02-11.pub.
 * ELB - Elastic Load Balancing
 * EC2 - Elastic Compute Cloud 
 * RDB - Relational Database
+* Lua - 언어?
