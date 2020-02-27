@@ -200,7 +200,71 @@ ALTER TABLE tab_test ADD created DATETIME NOT NULL,
 
 * 옵티마이저 종류  
 > 옵티마이저는 현재 대부분의 DBMS가 선택하고 있는 비용 기반 최적화(Cost-based optimizer, CBO) 방법과 예전 오라클에서 많이 사용했던 규칙 기반 최적화 방법(Rule-base optimizer, RBO)로 나눔, 현재는 거의 대부분의 RDBMS가 비용 기반의 옵티마이저를 채택
-  - 비용 
+
+* 통계 정보
+> 비용 기반 최적화에서 가장 중요한 것은 통계정보. MySQL 5.5 버전까지는 `SHOW INDEX STATS`명령으로만 분포도 확인이 가능했지만 MySQL 5.6부터는 mssql 데이터베이스의 `innodb_index_stats`테이블과 `innodb_table_stats`테이블에서도 인덱스 조회 가능  
+> MySQL 5.6부터는 테이블 생성할 때 `STATS_PERSISTENT`옵션 설정 가능
+
+|옵션|설명|
+|---|---|
+|STATS_PERSISTENT=0|통계 테이블을 기존 MySQL5.5이전 방식으로 관리, innodb_index_stats, innodb_table_stats 저장하지 않음|
+|STATS_PERSISTENT=1|innodb_index_stats, innodb_table_stats 저장|
+|STATS_PERSISTENT=DEFAULT|`innodb_stats_persistent` 시스템 설정에 따름, `기본적으로 ON(1)`로 되어 있음|
+
+* 통계 정보가 새로 수집되는 경우(5.5 버전까지)
+
+  - 테이블이 새로 오픈되는 경우
+  - 테이블의 레코드가 대량으로 변경되는 경우(전체의 1/16 정도 CUD 발생 시)
+  - ANALYZE TABLE 명령 실행 시
+  - SHOW TABLE STATUS 명령이나 SHOW INDEX FROM 실행 시
+  - InnoDB 모니터가 활성화 된 경우
+  - `innodb_stats_on_metadata` 시스템 설정이 ON된 상태에서 SHOW TABLE STATUS 명령이 실행된 경우
+> 자주 통계 정보가 변경되어 버리면, DB 서버가 풀 테이블 스캔으로도 변경되는 상황이 발생, 영구적인 통계 정보가 도입되면서 의도되지 않은 통계 정보 변경을 막을 수 있다. `innodb_stats_auto_recalc`시스템 변수로 통계 정보가 자동 수집되는 것을 막을 수 있음 `기본 ON(1)`, 영구적인 통계를 이용한다면 OFF로 변경, 테이블 생성시 `STATS_AUTO_RECALC`옵션을 통한 테이블 단위 조절 가능
+
+|옵션|설명|
+|---|---|
+|STATS_AUTO_RECALC=1|통계 정보를 5.5 이전 방식으로 자동 수집|
+|STATS_AUTO_RECALC=0|통계 정보를 ANALYZE TABLE 명령시에만 수집|
+|STATS_AUTO_RECALC=DEFAULT|`innodb_stats_auto_recalc`시스템 변수 값으로 결정|
+
+
+
+* MySQL 5.5 버전에서는 텅계 정보 수집시 몇 개의 InnoDB 테이블 블록으 ㄹ샘플링 할 것인지 결정하는 옵션으로 `innodb_stats_sample_pages` 시스템 변수가 제공되는데, MySQL5.6에서는 사라지고 `innodb_stats_transient_sample_pages`, `innodb_stats_persistent_sample_pages` 로 분리  
+
+|옵션|설명|
+|---|---|
+|innodb_stats_transient_sample_pages|기본값 8, 통계 수집시 8개의 페이지만 임의의 샘플링|
+|innodb_stats_persistent_sample_pages|기본값 20, ANALYZE TABLE명령시 임의의 20페이지 샘플링, 영구 통계값으로 저장 후 활용|
+
+* 통계정보 관리 방법 `use_stat_tables` 설정에 의해 결정, 기본값은 `never`
+
+|통계테이블|설명|
+|---|---|
+|table_stats|테이블 통계(레코드 수)|
+|column_stats|컬럼별 통계(정수값의 경우 최솟값, 최댓값, NULL 비율, 값 평균 길이, 중복값 존재 비율)|
+|index_stats|인텍스 통계(인덱스 키 순번, 중복 값 비율)|
+
+
+|옵션|설명|
+|---|---|
+|use_stat_tables='never'|MySQL5.6 통계 정보 관리 방ㅂ식과 동일, `table_stats`, `column_stats`, `index_stats` 테이블에는 수집되지 않음, 영구적 통계정보로 사용|
+|use_stat_tables='complementary'|각 스토리지 엔진이 제공하는 통계를 우선 사용, 정보가 부족하거나 없는 경우 통합 통계 정보를 사용|
+|use_stat_tables='preferably'|각 스토리지 엔진별로 관리되는 통계 정보보다 통합 통계 정보를 우선해서 사용|
+
+
+```sql
+-- tbl 통계 정보 그리고 col1, col2 컬럼, idx1, idx2 통계 정보 수집
+ANALYZE TABLE tbl PERSISTENT FOR COLUMNS (col1, col2) INDEXS (idx1, idx2);
+-- tbl 통계 정보 그리고 col1, col2 컬럼만 통계 정보 수집
+ANALYZE TABLE tbl PERSISTENT FOR COLUMNS (col1, col2) INDEXS ();
+-- tbl 통계 정보 그리고 idx1, idx2 통계 정보만 수집
+ANALYZE TABLE tbl PERSISTENT FOR COLUMNS () INDEXS (idx1, idx2);
+-- tbl 통계 정보의 통계 정보만 수집
+ANALYZE TABLE tbl PERSISTENT FOR COLUMNS () INDEXS ();
+-- tbl 테이블의 모든 칼럼, 모든 인덱스 통계 정보 수집
+ANALYZE TABLE tbl PERSISTENT FOR ALL;
+ANALYZE TABLE tbl; -- 동일 기능
+```
 
 ## 5. 최적화
 
