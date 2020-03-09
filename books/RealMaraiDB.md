@@ -266,6 +266,40 @@ ANALYZE TABLE tbl PERSISTENT FOR ALL;
 ANALYZE TABLE tbl; -- 동일 기능
 ```
 
+* 히스토그램? 
+MySQL 5.5 버전이나 MariaDB 5.5 버전에서는 실행 계획을 예측이 부정확하여, 이를 보완하기 위해서 실제 데이터 페이지를 분석하기도 한다. MariaDB 10.0에서는 인덱스로 만들어진 칼럼뿐만 아니라 인덱싱되지 않은 컬럼에 대해서도 모두 히스토그램 정보를 저장할 수 있도록 개선. MariaDB 10.0 에서는 테이블의 모든 칼럼에 대해서 최솟값과 최댓값 그리고 NULL 값을 가진 레코드의 비율, 칼럼 값들의 분포를 히스토그램으로 수집해서 `mysql.column_stats` 테이블에서 관리, 히스트르그램 관리 방법은 "Height-Balanced Histogram" 알고리즘 사용
+
+"Height-Balaced Histogram": 칼럼의 모든 값을 정렬해서 동일한 레코드 건수가 되도록 그룹을 몇 개로 나눈고, 각 그룹의 마지막 값(정렬 상태에서 큰 값)을 기록
+
+|옵션|설명|
+|---|---|
+|optimizer_user_condition_selectivity=1|MariaDB 5.5 에서 사용되던 선택도(Selectivity) 예측 방식 유지|
+|optimizer_user_condition_selectivity=2|인덱스가 생성되어 있는 칼럼의 조건에 대해서만 선택도 판단|
+|optimizer_user_condition_selectivity=3|모든 칼럼의 조건에 대해서 선택도 판단(히스토그램 사용 안함)|
+|optimizer_user_condition_selectivity=4|모든 칼럼의 조건에 대해서 선택도 판단(히스토그램 사용)|
+|optimizer_user_condition_selectivity=5|모든 칼럼의 조건에 대해서 히스토그램을 이용해서 선택도 판단하며, 추가적으로 인덱스 레인지 스캔이 불가한 칼럼에 대해서도 레코드 샘플링을 이용해서 선택도 판단|
+
+* 조인 옵티마이저 옵션
+
+  - "Exhausite 검색": MySQL 5.0과 그 이전에 사용되던 기법으로, FROM 절에 명시된 모든 테이블의 조합에 대해서 실행 계획의 비용을 계산하여 최적의 조합 1개를 찾는 방법. 
+
+  - "Heuristic 검색(Greedy 검색)":  Greedy 검색은 Exhaustive 검색의 시간 소모적인 문제점을 해결하기 위해 MySQL 5.0 부터 도입
+
+  > 1. 전체 N개의 테이블 중에서 optimizer_search_depth 시스템 설정 변수에 정의된 갯수의 테이블로 가능한 조인 조합 생성
+  > 2. 생성된 조인 조합중에서 최소 비용의 실행 계획 하나를 선정
+  > 3. 선정된 실행 계획의 첫 번째 테이블을 "부분 실행 계획"의 첫번째 테이블로 선정
+  > 4. 전체 N-1개의 테이블 중에서(3번 선택된 테이블 제외) optimizer_search_depth 시스템 설정 변수에 정의된 갯수의 테이블로 가능한 조인 조합을 생성
+  > 5. 4번 생성된 조인 결과들을 하나씩 3번에서 생성된 "부분 실행 계획"에 대입해서 실행 비용을 계산
+  > 6. 5번의 비용 계산 결과, 가장 비용이 낮은 실행 계획을 골라서 그중 두 번째 테이블을 3번에서 생성된 "부분 실행 계획"의 두 번째 테이블로 선정
+  > 7. 남은 테이블이 모두 없어질 때까지 4~6번 과정 반복
+  > 8. 최종적으로 "부분 실행 계획"이 테이블의 조인 순서로 결정 
+  
+  
+optimizer_prune_level: 검색 알고리즘 선택 옵션, "OFF" 설정 Exhausite 검색을 조인 최적화 알고리즘에 사용, ON 설정 Greedy 검색 사용. `기본 ON 설정`
+
+optimizer_search_depth: Greedy 검색에서만 사용되는 변수, 조인 쿼리 실행 계획 수립 성능에 영향(optimizer_search_depth 시스템 변수 기본값은 64), 조인 테이블이 적을 경우 큰 성능 차이 없음. (3 ~ 5개 테이블의 경우 )
+
+
 ## 5. 최적화
 
 ## 6. 스토리지 엔진
