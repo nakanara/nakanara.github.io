@@ -297,7 +297,51 @@ MySQL 5.5 버전이나 MariaDB 5.5 버전에서는 실행 계획을 예측이 �
   
 optimizer_prune_level: 검색 알고리즘 선택 옵션, "OFF" 설정 Exhausite 검색을 조인 최적화 알고리즘에 사용, ON 설정 Greedy 검색 사용. `기본 ON 설정`
 
-optimizer_search_depth: Greedy 검색에서만 사용되는 변수, 조인 쿼리 실행 계획 수립 성능에 영향(optimizer_search_depth 시스템 변수 기본값은 64), 조인 테이블이 적을 경우 큰 성능 차이 없음. (3 ~ 5개 테이블의 경우 )
+optimizer_search_depth: Greedy 검색에서만 사용되는 변수, 조인 쿼리 실행 계획 수립 성능에 영향(optimizer_search_depth 시스템 변수 기본값은 64), 조인 테이블이 적을 경우 큰 성능 차이 없음. (3 ~ 5개 테이블의 경우)
+
+- 테스트 예제 사이트: https://launchpad.net/test-db
+- 테스트 데이터: http://cafe.naver.com/realmysql
+
+
+* 실행 계획 분석
+
+EXPLAIN 명령어를 이용하여 실행 계획 분석, UPDATE, INSERT, DELETE 문장에 대해서는 실행 계획을 확인할 방법은 없다, 해당 구문의 실행 계획을 확인하려면 동일 조건을 SELECT 조건으로 변경하여 확인
+
+* DEPENDENT SUBQUERY 
+
+서브 쿼리가 바깥쪽(Outer) SELECT 쿼리에서 정의된 칼럼을 사용하는 경우를 DEPENDENT SUBQUERY라고 표현
+아래 쿼리는 안쪽(Inner)의 서브 쿼리 결과가 바깥쪽(Outer) SELECT 쿼리의 결과에 의존적이라서 DEPENDENT라는 키워드가 붙는다. 또한 `DEPENDENT UNION과 같이 DEPENDENT SUBQUERY 또한 외부 쿼리가 먼저 수행된 후 내부 쿼리(서브 쿼리)가 실행돼야 하므로 일반 서브 쿼리보다는 속도가 느릴때가 많다.`
+
+```SQL
+EXPLAIN
+SELECT e.first_name,
+  (SELECT COUNT(*) FROM dept_emp de, dept_manager dm
+    WHERE dm.dept_no = de.dept_no
+      AND dm.emp_no = e.emp_no
+  ) AS cnt
+FROM employees e
+WHERE e.first_name = 'Matt'; 
+```
+
+### type 칼럼
+
+쿼리의 실행 계획에서 type 이후의 칼럼은 MariaDB 서버가 각 테이블의 레코드를 어떤 방식으로 읽었는지를 나타낸다. 여기서 방식이라 함은 인덱스를 사용해 레코드를 읽었는지 아니면 테이블을 처음부터 끝까지 읽는 풀 테이블 스캔으로 레코드를 읽었는지 등을 의미한다. 일반적으로 쿼리를 튜닝할 때 인덱스를 효율적으로 사용하는지 확인하는 것이 중요하므로 실행 계획에서 type 칼럼은 반드시 체크해야 할 중요한 정보다.
+
+|Index type|설명|
+|---|---|
+|system||
+|const||
+|eq_ref||
+|ref||
+|fulltext||
+|ref_or_null||
+|unique_subquery||
+|index_subquery||
+|range||
+|index_merge||
+|index||
+|ALL||
+
 
 
 ## 5. 최적화
