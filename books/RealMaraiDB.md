@@ -329,18 +329,18 @@ WHERE e.first_name = 'Matt';
 
 |Index type|설명|
 |---|---|
-|system||
-|const||
-|eq_ref||
-|ref||
-|fulltext||
-|ref_or_null||
-|unique_subquery||
-|index_subquery||
-|range||
-|index_merge||
-|index||
-|ALL||
+|system|레코드가 1건만 존재하는 테이블 또는 한 건도 존재하지 않는 테이블 참조 형태|
+|const|테이블의 레코드 건수에 관계 없이 쿼리가 PK나 UK 컬럼 이용하는 조건절 있는 경우, PK나 UK 중 일부 컬럼만 조건에 사용시 const 가 아닌 ref 로 표시(레코드가 1건이라고 확신할 수 없음), const의 경우 반드시 한건만 반환|
+|eq_ref|여러 테이블 조인되는 쿼리의 실행 계획에서만 표시되며, 조인에서 처음 읽은 테이블의 컬럼 값을 그 다음에 처리할 테이블의 PK 혹은 UK 컬럼의 조회 조건에 사용될 경우 표시, 두 번째 테이블은 반드시 한건만 반환|
+|ref|eq_ref와 달리 조인의 순서와 관계 없이 사용, PK 혹은 UK 여부와도 관계 없이 조건으로 동등(Equals) 조건 검색에 사용, 한건 이상의 레코드 가능성|
+|fulltext|MATCH...AGAINST 구문 실행시 사용, 인덱스가 fulltext의 경우 사용|
+|ref_or_null|ref 접근 방식과 같지만, NULL 비교가 추가된 형태, IS NULL 이 있는 경우|
+|unique_subquery|조건절에서 사용되 수 있는 IN(sub query)형태의 쿼리를 위한 접근 방식, 서비 쿼리에서 중복되지 않은 유니크 값만 반환할 때 사용, IN(Sub Query)의 경우 반환 값에 중복이 없으므로 별도의 중복 제거 작ㅇ버이 필요하지 않음|
+|index_subquery|서브 쿼리 결과의 중복된 값을 인덱스를 이용해서 제거할 수 있을 때 사용|
+|range|하나의 값이 아닌 범위 검색 주로 "<,>,IS NULL, BETWEEN, IN, LIKE" 등의 연산자를 이용해 인덱스를 검색할 때 사용, 일반적으로 많이 사용|
+|index_merge|2개 이상의 인덱스를 이용해 각각의 검색 결과를 만들어낸 후 그 결과를 병합처리|
+|index|index 접근 방식은 인덱스를 처음부터 끝까지 읽는 `인덱스 풀 스캔`을 의미!!|
+|ALL|`테이블 풀 스캔`|
 
 
 

@@ -312,7 +312,11 @@ var repeat = function (str, n) {
     };
 ```
 - generateComponentTrace : 오류 tree구조
-- Dep : 깊은 구조
+- Dep : uid 기록 및 subs 메모리
+
+## Dep.prototype
+- addSub(sub): sub 담기
+- removeSub(sub): sub 제거
 - 
 
 
