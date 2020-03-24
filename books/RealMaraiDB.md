@@ -154,6 +154,24 @@ WHERE e.first_name = 'Matt';
 |index|index 접근 방식은 인덱스를 처음부터 끝까지 읽는 `인덱스 풀 스캔`을 의미!!|
 |ALL|`테이블 풀 스캔`|
 
+### Extra 칼럼
+
+쿼리의 실행 계획에서 성능에 관련된 중요한 내용이 Extra 칼럼에 자주 표시된다. Extra 칼럼에는 고정된 몇 개의 문장이 표시되는데, 일반적으로 2 ~ 3개씩 같이 표시
+
+|Extra|설명|
+|---|---|
+|const row not found|테이블을 접근했지만, 해당 테이블에 레코드가 없는 경우|
+|distinct|distinct 처리|
+|Full scan on NULL key|`col1 IN (select col2 from... )` 과 같은 조건에 많이 발생, NULL이 포함된 것은 풀 테이블 스캔을 해야지 판단 가능,  `col1 is not null` 과 함께 정의시 풀스캔 하지 않음|
+|Impossible HAVING|having 절의 조건을 만족하는 레코드가 없는 경우 발생 `쿼리 확인 필요`|
+|Impossible WHERE|불가능한 where 조건일 경우 발생, 레코드가 없는 경우|
+|Impossible WHERE noticed after reading const tables| 실행 계획 수립단계에서 옵티마이저가 직접 쿼리의 일부를 실행하고, 실행된 결과를 쿼리의 상수로 대체|
+|No matching min/max row|min, max와 같은 집합 함수가 있는 쿼리의 조건절에서 일치하는 레코드가 없는 경우|
+|no matching row in const table|const 방식으로 접근할 때 일치하는 레코드가 없는 경우|
+|No tables used|FROM 절이 없는 문장 from dual|
+|Not exists|A테이블에 존재하지만 B에 없는 값을 조회 할때 NOT IN(...)형태나 NOT EXISTS 연산자 사용, 이러한 형태의 조인을 안티-조인(Anti-join)이라고 함, 하지만 동일한 것을 아우터 조인(LEFT OUTER JOIN)을 이용해서 구현이 가능하며, 아우터 조인을 이용하는 경우 표시 됨|
+|Rangechecked for each record(index map:N)|매 레코드마다 인덱스 레인지 스캔을 체크|
+|Sccanned N databases|INFORMATION_SCHEMA 내의 테이블로부터 데이터를 읽는 경우 표시, 몇 개의 DB 정보를 읽었는지 보여주는 것|
 
 
 ## 5. 최적화
