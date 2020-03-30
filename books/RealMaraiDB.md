@@ -171,7 +171,14 @@ WHERE e.first_name = 'Matt';
 |No tables used|FROM 절이 없는 문장 from dual|
 |Not exists|A테이블에 존재하지만 B에 없는 값을 조회 할때 NOT IN(...)형태나 NOT EXISTS 연산자 사용, 이러한 형태의 조인을 안티-조인(Anti-join)이라고 함, 하지만 동일한 것을 아우터 조인(LEFT OUTER JOIN)을 이용해서 구현이 가능하며, 아우터 조인을 이용하는 경우 표시 됨|
 |Rangechecked for each record(index map:N)|매 레코드마다 인덱스 레인지 스캔을 체크|
-|Sccanned N databases|INFORMATION_SCHEMA 내의 테이블로부터 데이터를 읽는 경우 표시, 몇 개의 DB 정보를 읽었는지 보여주는 것|
+|Sccanned N databases|INFORMATION_SCHEMA 내의 테이블로부터 데이터를 읽는 경우 표시, 몇 개의 DB 정보를 읽었는지 보여주는 것이며, N의 의미(0: 특정 테이블의 정보만 요청되어 데이터베이스 전체의 메타 정보를 읽지 않음, 1: 특정 데이터베이스내의 모든 스키마 정보가 요청되어 해당 데이터베이스의 모든 스키마 정보를 읽음, All: 서버 내 모든 스키마 정보를 읽음|
+|Select tables optimized ayay|min, max를 조회하는 쿼리에서 적절한 인덱스를 사용할 수 없을 때 인덱스를 오름차순 또는 내림차순으로 1건만 읽는 형태의 최적화가 적용된다면 표시|
+|Skip_open_table, Open_frm_only, Open_trigger_only, Open_full_table|"Scanned N databases"와 같이 INFOMATION_SCHEMA DB의 메타 정보를 조회하는 SELECT 쿼리의 실행 계획에서만 표시, Skip_open_table: 테이블의 메타 정보가 저장된 파일을 별도로 읽을 필요가 없음, Open_frm_only: 테이블의 메타 정보가 저장된 파일(\*.FRM)만 열어서 읽음, Open_trigger_only:트리거 정보가 저장된 파일(\*.Trg)만 열어서 읽음, Open_full_table: 최적화되지 못해서 테이블 메타 정보 파일(\*.FRM)과 데이터 (\.*MYD), 인덱스 파일(\*.MYI) 까지 모두 읽음|
+|unique row not found|두 개의 테이블이 각각 유니크(프라이머리 키 포함)칼럼으로 아우터 조인을 수행하는 쿼리에서 아우터 테이블에 일치하는 레코드가 존재하지 않을 때|
+|Using filesort|Order by 처리가 인덱스를 사용하지 못할 때만 표시, 이는 조회된 레코드를 정렬용 메모리 버퍼에 복사해 퀵 소트 알고리즘 수행|
+|Using index(커버링 인덱스)|데이터 파일을 전혀 읽지 않고 인덱스만 읽어서 쿼리를 모두 처리할 수 있을 때|
+
+
 
 
 ## 5. 최적화
