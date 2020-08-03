@@ -41,7 +41,7 @@
 
 
 
-* MySQL 5.5 버전에서는 텅계 정보 수집시 몇 개의 InnoDB 테이블 블록으 ㄹ샘플링 할 것인지 결정하는 옵션으로 `innodb_stats_sample_pages` 시스템 변수가 제공되는데, MySQL5.6에서는 사라지고 `innodb_stats_transient_sample_pages`, `innodb_stats_persistent_sample_pages` 로 분리  
+* MySQL 5.5 버전에서는 텅계 정보 수집시 몇 개의 InnoDB 테이블 블록을 샘플링 할 것인지 결정하는 옵션으로 `innodb_stats_sample_pages` 시스템 변수가 제공되는데, MySQL5.6에서는 사라지고 `innodb_stats_transient_sample_pages`, `innodb_stats_persistent_sample_pages` 로 분리  
 
 |옵션|설명|
 |---|---|
