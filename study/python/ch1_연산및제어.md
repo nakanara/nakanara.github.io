@@ -1,8 +1,11 @@
 
-## 연산 및 제어문
+# 연산 및 제어문
+
+![image](https://user-images.githubusercontent.com/1871682/97956992-5a0a2100-1ded-11eb-9e37-083a872fb6aa.png)
+
+## 연산
 
 ```python
-
 "더하기"
 >>> 1 + 2 
 3
@@ -23,8 +26,6 @@
 "제곱"
 >>> 2 ** 3
 8
-
-
 ```
 
 ## 변수 사용
@@ -50,7 +51,7 @@ Hello World!
 
 ### 조건문 if
 
-**들여쓰기 규칙에 의해 탭 또는 공백(4칸)으로 들여쓰기 필요**
+중괄호로 감싸는 것이 없으며 들여 쓰기로 구분하기 때문에 **탭 또는 공백(4칸)으로 들여 쓰기 필요**
 
 ```python
 >>> a = 15
@@ -74,6 +75,7 @@ yes
 
 
 ### 반복문 for
+
 
 ```python
 >>> for i in [1,2,3,"a","b","c"]:
@@ -125,7 +127,7 @@ c
 
 ### Membership
 
-멤버연산자에는 in, not in 존재, 해당 값이 존재하는지 파악
+멤버 연산자에는 in, not in 존재, 해당 값이 존재하는지 파악
 
 ```python 
 >>> a = [1, 2, 3, 4]
@@ -145,7 +147,7 @@ False
 mutable 데이터 타입과 immutable 데이터 타입이 존재
 
 * mutable: 객체를 생성한 후, 객체의 값을 수정 가능, 변수는 값이 수정된 같은 객체를 표시(list, set, dict)
-* immutable: 객체를 생성한 후, 객체의 값 수정 불가, 변수는 해당 값을 가진 다른 객체를 가르키게 됨(int, float, complex, bool, string, tuple, frozon set)
+* immutable: 객체를 생성한 후, 객체의 값 수정 불가, 변수는 해당 값을 가진 다른 객체를 주소 값을 가지고 있으며, 수정하는 경우 새로운 주소 값을 할당 받음(int, float, complex, bool, string, tuple)
 
 ```python 
 >>> a = "ABC"
@@ -161,3 +163,5 @@ False
 >>> id(a)
 >>> id(b)
 ```
+
+#python #연산 #제어문
