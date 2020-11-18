@@ -102,7 +102,7 @@ c
 3
 ```
 
-### 함수
+## 함수
 
 ```python
 >>> def sum(a, b):
@@ -114,7 +114,7 @@ c
 
 
 
-### Bitwise 연산
+## Bitwise 연산
 
 ```python 
 >>> a = 8    # 0000 1000
@@ -125,7 +125,7 @@ c
 8 11 8 3
 ```
 
-### Membership
+## Membership
 
 멤버 연산자에는 in, not in 존재, 해당 값이 존재하는지 파악
 
@@ -141,7 +141,7 @@ False
 
 ```
 
-### Identity 연산자
+## Identity 연산자
 
 동일 객체 여부 판단
 mutable 데이터 타입과 immutable 데이터 타입이 존재
