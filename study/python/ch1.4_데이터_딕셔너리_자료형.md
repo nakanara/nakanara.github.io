@@ -3,7 +3,7 @@
 
 ![image](https://user-images.githubusercontent.com/1871682/97956992-5a0a2100-1ded-11eb-9e37-083a872fb6aa.png)
 
-Key = Value 형식으로 Key에 대응하는 값을 표현 할 수 있으며, 이러한 대응 관계를 연관 배열(Associative array) 또는 해시(Hash)라고 한다.
+Key = Value 형식으로 Key에 대응하는 값을 표현할 수 있으며, 이러한 대응 관계를 연관 배열(Associative array) 또는 해시(Hash)라고 한다.
 
 ```python
 >>> dic = {'key':'value', 'name':'Kai', 'age':'20'}
@@ -23,7 +23,7 @@ Key = Value 형식으로 Key에 대응하는 값을 표현 할 수 있으며, �
 [1, 2, 3]
 ```
 
-dic 에 담긴 대응 관계 정보
+dic에 담긴 대응 관계 정보
 
 |Key|Value|
 |--|--|
@@ -61,7 +61,7 @@ dic 에 담긴 대응 관계 정보
 'Kai'
 ```
 
-* 같은 Key로 생성할 경우 앞에 값이 덮어쓰임
+* 같은 Key로 생성할 경우 앞에 값이 덮어씀
 
 ```python
 >>> a = {1:'a', 1:'b'}
@@ -71,7 +71,7 @@ dic 에 담긴 대응 관계 정보
 
 * Key로 리스트는 사용할 수 없다.
 
-변경이 가능한 자료형은 Key 값으로 사용이 불가능 하다
+변경이 가능한 자료형은 Key 값으로 사용이 불가능하다
 
 ```python
 
@@ -163,3 +163,4 @@ False
 True
 ```
 
+#딕셔너리 #hash #key=value
