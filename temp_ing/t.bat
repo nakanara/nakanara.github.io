@@ -5,53 +5,58 @@
 @rem ===============================================
 
 
-@rem 복사 경로
-set target=C:\Temp\temp\patch_11
-@rem 원본 경로
+rem 복사 대상 시작 경로
+rem set target=C:\Temp\temp\patch_20201218
+set target=%cd%
+
+rem 소스 시작 경로
 set src=D:\work_space\egene6.0
 
-
-set file="src\main\webapp\xslm\jsp\ind\ind_summary.jsp"
-@rem 문자열 변경
+rem 입력 받은 파일 경로
+set file="%1"
 echo %file%
 
+rem 문자열 변경
 set file=%file:/=\% 
-set t= %file%
+set t=%file%
 
-set /a count= 1
-set token = ""
-echo %t%
-echo %count%
+set count=1
+set token=""
 
 cd %target%
 
-@rem 가장 마지막 path를 제외하고는 폴더로 판단하고 생성 함
+rem 가장 마지막 path를 제외하고는 폴더로 판단하고 생성 함
+rem 
+rem tokens 1,* 첫번째 값을 %%a에 그 외값은 %%b 에 입력, 1회만 돌아감
 
 :loop
-FOR /f "tokens=1* delims=\" %%a in (%t%) do (
+FOR /f "tokens=1,* delims=\" %%a in (%t%) do (
 
   set token="%%a"
   set t="%%b"
   set /a count += 1
-  echo "loop " %t% %count%
+  @rem echo "loop " %t% %count%
 )
-
+echo "1"
 if NOT [%t%] == [""] (
 
   @rem 이동 및 디렉토리 생성
-  echo %token%
+  @rem echo %token%
   
   IF NOT EXIST %token% (
-    echo "create folder"
+    @rem echo "create folder"
     mkdir %token%
   )
   cd %token%
-  echo "back"
   goto :loop
 ) 
 
 @rem copy
-copy %src%/%file% %targat%/%file% 
+echo %src%\%file% %target%\%file%
+copy %src%\%file% %target%\%file% 
 
+cd %target%
+
+@rem https://ss64.com/nt/for_f.html
 @rem https://ss64.com/nt/syntax-replace.html
 @rem https://stackoverflow.com/questions/1707058/how-to-split-a-string-by-spaces-in-a-windows-batch-file
