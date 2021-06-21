@@ -183,6 +183,9 @@ exclude:
   - Rakefile
   - README
   - tmp
+  - /study
+  - /temp
+  - /edu
   - /docs # ignore Minimal Mistakes /docs
   - /test # ignore Minimal Mistakes /test
 keep_files:
