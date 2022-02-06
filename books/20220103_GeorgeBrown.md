@@ -44,4 +44,8 @@ George had a lot of `practice[praktəs]` being the new kid. His dad was in the a
 "George! It's 0-800 hours. `Gotta[ˈɡädə]` get a move on! Front and center!"
   His dad's deep voice `echoed[ˈekō` `through[THro͞o]` the halls of their new house. It was a lot bigger that their old house. Even with all their `furniture[ˈfərniCHər]`, it `felt[felt]` empyt. In fact, the long `upstairs[əpˈsterz]` hallway would be great for skateboarding-except his mom never let him skateboard in the house.
 
-P.6
+George `grabbed[ɡrab]` his backpack and headed `downstairs[dounˈsterz]`. For a second, about sliding down the `banister[ˈbanəstər]`. Then he stopped himself. That was sometime the old George would do.Now, `besides[bəˈsīdz]` being the new kid, he wanted to be a new George. And the new George didn't do `dumb[dəm]` `stuff[stəf]` like that, dumb stuff that get him into trouble.
+
+The last time George slid down a banister was at his old school. He'd flipped over the side of the staircase and wound up with a black eye and a bloody nose. And not just a regular bloody nose. A super-colossal bloody nose. The kind that turns your nose into a blood fountain. The school nurse said she'd never seen anything like it. It had been sort of gross. But sort of cool, too.
+
+> dump stuff: 멍청한 짓
